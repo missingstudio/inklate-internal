@@ -8,15 +8,17 @@ import {
   ScrollRestoration
 } from "react-router";
 
+import { ServerProviders } from "~/providers/server-providers";
+import { ClientProviders } from "~/providers/client-providers";
 import { siteConfig } from "~/lib/site-config";
 import type { Route } from "./+types/root";
 import "./app.css";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: siteConfig.title },
+    { title: siteConfig.name },
     { name: "description", content: siteConfig.description },
-    { property: "og:title", content: siteConfig.title },
+    { property: "og:title", content: siteConfig.name },
     { property: "og:description", content: siteConfig.description },
     { property: "og:type", content: "website" }
   ];
@@ -45,7 +47,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <ServerProviders>
+          <ClientProviders>{children}</ClientProviders>
+        </ServerProviders>
         <ScrollRestoration />
         <Scripts />
       </body>

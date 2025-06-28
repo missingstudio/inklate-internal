@@ -1,3 +1,8 @@
+import { useTRPC } from "~/providers/query-provider";
+import { useQuery } from "@tanstack/react-query";
+
 export function Home() {
-  return <main>Welcome to console</main>;
+  const trpc = useTRPC();
+  const { data: hello, isLoading: isLoadingLabels } = useQuery(trpc.hello.queryOptions());
+  return <main>{hello?.greeting}</main>;
 }

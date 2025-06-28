@@ -7,3 +7,4 @@ BETTER_AUTH_SECRET=secret
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/inklate
 GOOGLE_CLIENT_ID="google-oauth-client-id"
 GOOGLE_CLIENT_SECRET="google-oauth-client-secret"
+RESEND_API_KEY="resend-api-key"

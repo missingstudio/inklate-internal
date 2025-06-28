@@ -6,7 +6,7 @@
     "moduleResolution": "Bundler",
     "lib": ["ESNext"],
     "jsx": "preserve",
-    "types": ["node", "@cloudflare/workers-types"],
+    "types": ["node", "@cloudflare/workers-types", "@cloudflare/vitest-pool-workers"],
     "paths": {
       "~/*": ["./src/*"]
     }

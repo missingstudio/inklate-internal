@@ -7,5 +7,7 @@ export default [
     route("privacy", "(full-width)/privacy.tsx")
   ]),
 
-  route("login", "(auth)/login/page.tsx")
+  route("signin", "(auth)/signin/page.tsx"),
+  route("signup", "(auth)/signup/page.tsx"),
+  route("verify-email", "(auth)/verify-email/page.tsx")
 ] satisfies RouteConfig;

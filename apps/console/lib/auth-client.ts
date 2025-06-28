@@ -5,6 +5,8 @@ export const authClient = createAuthClient({
   credentials: "include"
 });
 
+export const { signIn, signUp, signOut, useSession, getSession, $fetch } = authClient;
+export type Session = Awaited<ReturnType<typeof getSession>>;
 export const authProxy = {
   api: {
     getSession: async ({ headers }: { headers: Headers }) => {

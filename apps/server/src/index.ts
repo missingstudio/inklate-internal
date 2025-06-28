@@ -2,14 +2,37 @@ import { env, WorkerEntrypoint } from "cloudflare:workers";
 import { HonoContext } from "./ctx";
 import { Hono } from "hono";
 
+import { appRouter, createTRPCContext } from "./trpc";
+import { trpcServer } from "@hono/trpc-server";
 import { getAuth } from "~/lib/auth";
 import { cors } from "hono/cors";
 
 export default class extends WorkerEntrypoint<typeof env> {
-  private api = new Hono<HonoContext>().on(["GET", "POST", "OPTIONS"], "/auth/*", (c) => {
-    const auth = getAuth(env.DATABASE_URL);
-    return auth.handler(c.req.raw);
-  });
+  private api = new Hono<HonoContext>()
+    .use("*", async (c, next) => {
+      const auth = getAuth(env.DATABASE_URL);
+      const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+      c.set("auth", auth);
+      c.set("user", session?.user);
+
+      await next();
+
+      c.set("user", undefined);
+      c.set("auth", undefined as any);
+    })
+    .on(["GET", "POST", "OPTIONS"], "/auth/*", (c) => c.var.auth.handler(c.req.raw))
+    .use(
+      trpcServer({
+        endpoint: "/api/trpc",
+        router: appRouter,
+        createContext: createTRPCContext,
+        allowMethodOverride: true,
+        onError: (opts) => {
+          console.error("Error in TRPC handler:", opts.error);
+        }
+      })
+    );
 
   private app = new Hono<HonoContext>()
     .use(

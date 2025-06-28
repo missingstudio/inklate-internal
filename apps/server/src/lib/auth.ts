@@ -1,6 +1,8 @@
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import VerifyEmail from "@inklate/email/verify-email";
+import { betterAuth, User } from "better-auth";
 import { env } from "cloudflare:workers";
-import { betterAuth } from "better-auth";
+import { sendEmail } from "./email";
 import { getDb } from "~/db";
 
 export const authConfig = {
@@ -24,7 +26,28 @@ export const authConfig = {
   },
 
   emailAndPassword: {
-    enabled: false
+    enabled: true,
+    requireEmailVerification: true
+  },
+
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ token, user }: { token: string; user: User }) => {
+      const url = new URL(`${env.VITE_PUBLIC_APP_URL}/verify-email`);
+      url.searchParams.set("token", token);
+
+      if (env.NODE_ENV === "development") {
+        console.log("Verification Link:", url.href);
+        return;
+      }
+
+      await sendEmail({
+        to: user.email,
+        subject: "[Inklate] Please verify your email address",
+        react: VerifyEmail({ url: url.href, name: user.name })
+      });
+    }
   },
 
   socialProviders: {
@@ -45,3 +68,5 @@ export function getAuth(databaseUrl: string) {
     ...authConfig
   });
 }
+
+export type Auth = ReturnType<typeof getAuth>;

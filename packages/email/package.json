@@ -1,0 +1,28 @@
+{
+  "name": "@inklate/email",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./verify-email": "./emails/verify-email.tsx",
+    "./reset-password-email": "./emails/reset-password-email.tsx",
+    "./invitation-email": "./emails/invitation-email.tsx"
+  },
+  "scripts": {
+    "lint": "biome check ./emails",
+    "format": "biome format --write .",
+    "dev": "email dev -p 9999"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.36",
+    "@react-email/tailwind": "^1.0.4"
+  },
+  "devDependencies": {
+    "@inklate/tsconfig": "workspace:*",
+    "react-email": "^4.0.7"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}
