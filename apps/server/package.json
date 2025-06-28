@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "scripts": {
+    "test": "vitest",
+    "dev": "wrangler dev --env local",
+    "deploy": "wrangler deploy --minify",
+    "types": "wrangler types --env local",
+    "postinstall": "npm run types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.10",
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.8.2",
+    "hono": "^4.8.3",
+    "postgres": "^3.4.7",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.47",
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "drizzle-kit": "^0.31.4",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.4.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "@inklate/tsconfig/base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ESNext"],
+    "jsx": "preserve",
+    "types": ["node", "@cloudflare/workers-types"],
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "worker-configuration.d.ts", "drizzle.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}

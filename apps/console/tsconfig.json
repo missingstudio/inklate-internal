@@ -1,0 +1,14 @@
+{
+  "extends": "@inklate/tsconfig/base.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["node", "vite/client"],
+    "jsx": "preserve",
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "rootDirs": [".", "./.react-router/types"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "worker-configuration.d.ts"],
+  "exclude": ["node_modules"]
+}

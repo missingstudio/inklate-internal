@@ -1,0 +1,37 @@
+{
+  "name": "inklate",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "check:format": "prettier . --check",
+    "check": "bun run check:format && bun run lint",
+    "lint-staged": "prettier . --write --ignore-unknown",
+    "format": "prettier . --write \"**/*.{ts,tsx,md}\" --log-level silent",
+    "docker:db:up": "docker compose -f docker-compose.db.yaml up -d",
+    "docker:db:stop": "docker compose -f docker-compose.db.yaml stop",
+    "docker:db:down": "docker compose -f docker-compose.db.yaml down",
+    "docker:db:clean": "docker compose -f docker-compose.db.yaml down -v",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "prettier": "^3.6.0",
+    "turbo": "^2.5.4",
+    "typescript": "5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.2.8",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "prettier-plugin-sort-imports": "^1.8.8",
+    "prettier-plugin-tailwindcss": "^0.6.13"
+  }
+}

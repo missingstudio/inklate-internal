@@ -1,0 +1,38 @@
+{
+  "name": "console",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "types": "wrangler types",
+    "dev": "react-router dev --port 3000",
+    "build": "react-router build",
+    "postinstall": "npm run types",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && vite preview",
+    "start": "wrangler dev --port 3000 --show-interactive-dev-session=false"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.10",
+    "isbot": "^5.1.27",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.3"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.0.12",
+    "@cloudflare/vitest-pool-workers": "^0.8.47",
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "@react-router/dev": "^7.5.3",
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/node": "^20",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.13.2"
+  }
+}
