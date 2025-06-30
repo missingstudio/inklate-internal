@@ -5,7 +5,7 @@
   "scripts": {
     "test": "vitest",
     "types": "wrangler types",
-    "dev": "react-router dev --port 3000",
+    "dev": "react-router dev --port 3000 --config vite-dev.config.ts",
     "build": "react-router build",
     "postinstall": "npm run types",
     "deploy": "npm run build && wrangler deploy",
@@ -18,6 +18,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@inklate/server": "workspace:*",
     "@inklate/ui": "workspace:*",
+    "@tabler/icons-react": "^3.34.0",
     "@tanstack/react-query": "^5.81.5",
     "@tanstack/react-query-persist-client": "^5.81.5",
     "@trpc/tanstack-react-query": "^11.4.3",

@@ -1,17 +1,12 @@
-import { cloudflare } from "@cloudflare/vite-plugin";
 import { reactRouter } from "@react-router/dev/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
+import deno from "@deno/vite-plugin";
 import { defineConfig } from "vite";
 import pkg from "./package.json";
 
 export default defineConfig({
-  plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
-    tailwindcss(),
-    reactRouter(),
-    tsconfigPaths()
-  ],
+  plugins: [deno(), tailwindcss(), reactRouter(), tsconfigPaths()],
   optimizeDeps: {
     include: Object.keys(pkg.dependencies).filter((dep) => !dep.startsWith("@inklate/"))
   },
@@ -22,6 +17,17 @@ export default defineConfig({
     warmup: {
       clientFiles: ["./app/**/*", "./components/**/*"],
       ssrFiles: ["./app/**/*", "./components/**/*"]
+    }
+  },
+  environments: {
+    ssr: {
+      build: {
+        target: "ESNext"
+      },
+      resolve: {
+        conditions: ["deno"],
+        externalConditions: ["deno"]
+      }
     }
   }
 });
