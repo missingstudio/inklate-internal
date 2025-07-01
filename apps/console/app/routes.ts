@@ -10,5 +10,10 @@ export default [
   layout("(full-width)/layout.tsx", [
     route("terms", "(full-width)/terms.tsx"),
     route("privacy", "(full-width)/privacy.tsx")
+  ]),
+
+  layout("(dashboard)/canvas/layout.tsx", [
+    route("canvas", "(dashboard)/canvas/page.tsx"),
+    route("canvas/:canvasId", "(dashboard)/canvas/[canvasId]/page.tsx")
   ])
 ] satisfies RouteConfig;
