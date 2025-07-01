@@ -1,6 +1,7 @@
 @import "tailwindcss";
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/geist-mono";
+@import "@fontsource/geist";
+@import "@fontsource/geist-mono";
+@import "@fontsource/jetbrains-mono";
 @source "../../../packages/ui/**/*.{ts,tsx,mdx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -145,9 +146,9 @@
 
 @theme {
   --font-sans:
-    "Geist Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Geist", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: "Geist Variable Mono", ui-monospace, monospace;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
 html,
@@ -157,4 +158,8 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+.font-jetbrains-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
 }

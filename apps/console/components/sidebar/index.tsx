@@ -36,7 +36,7 @@ const data = {
   },
   navMain: [
     {
-      title: "My Files",
+      title: "My files",
       url: "#",
       icon: IconFileStack
     }
