@@ -4,6 +4,7 @@ import { Hono } from "hono";
 
 import { appRouter, createTRPCContext } from "./trpc";
 import { trpcServer } from "@hono/trpc-server";
+import { webSocketHandler } from "./ws";
 import { getAuth } from "~/lib/auth";
 import { cors } from "hono/cors";
 
@@ -21,6 +22,7 @@ export default class extends WorkerEntrypoint<typeof env> {
       c.set("user", undefined);
       c.set("auth", undefined as any);
     })
+    .get("/ws", webSocketHandler)
     .on(["GET", "POST", "OPTIONS"], "/auth/*", (c) => c.var.auth.handler(c.req.raw))
     .use(
       trpcServer({
