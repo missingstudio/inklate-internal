@@ -7,17 +7,22 @@ import {
   EdgeChange
 } from "@xyflow/react";
 import { createWithEqualityFn } from "zustand/traditional";
+import { ReadyState } from "react-use-websocket";
 import { BaseNodeData } from "~/types/node";
+import { DragEvent } from "react";
+import { ulid } from "ulid";
 
 export type NodeId = string;
 export type EdgeId = string;
 
-export type GraphState = {
+export interface CanvasState {
+  reactFlowInstance: any;
+  setReactFlowInstance: (instance: any) => void;
+  reactFlowWrapper: null | HTMLDivElement;
+  setReactFlowWrapper: (ref: HTMLDivElement | null) => void;
+
   nodes: Node[];
   edges: Edge[];
-};
-
-export interface GraphStore extends GraphState {
   addNode: (node: Node) => void;
   removeNode: (nodeId: NodeId) => void;
   updateNode: (nodeId: NodeId, update: Partial<Node>) => void;
@@ -32,9 +37,25 @@ export interface GraphStore extends GraphState {
   setEdgeData: <T = any>(id: string, data: Partial<T>) => void;
   onNodesChange: (changes: NodeChange[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
+  onDragOver: (event: DragEvent<HTMLDivElement>) => void;
+  onDrop: (event: DragEvent<HTMLDivElement>) => void;
+  getId: (type: string) => string;
 }
 
-export const useGraphStore = createWithEqualityFn<GraphStore>((set, get) => ({
+export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get) => ({
+  reactFlowInstance: null,
+  setReactFlowInstance: (instance: any) => {
+    set({ reactFlowInstance: instance });
+  },
+
+  reactFlowWrapper: null,
+  setReactFlowWrapper: (ref: HTMLDivElement | null) => {
+    set({ reactFlowWrapper: ref });
+  },
+
+  webSocketConnectionStatus: ReadyState.UNINSTANTIATED,
+
+  // reactflow state
   nodes: [{ id: "1", type: "text", position: { x: 100, y: 100 }, data: { label: "1" } }],
   edges: [],
 
@@ -98,5 +119,49 @@ export const useGraphStore = createWithEqualityFn<GraphStore>((set, get) => ({
     set((state) => ({
       edges: applyEdgeChanges(changes, state.edges)
     }));
+  },
+
+  onDragOver: (event: any) => {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = "move";
+    }
+  },
+  onDrop: (event: any) => {
+    event.preventDefault();
+    const reactFlowBounds = get().reactFlowWrapper?.getBoundingClientRect();
+    const type = event.dataTransfer?.getData("application/reactflow");
+
+    // check if the dropped element is valid
+    if (typeof type === "undefined" || !type) {
+      console.log("Invalid type");
+      return;
+    }
+
+    if (!reactFlowBounds) {
+      console.log("Invalid reactFlowBounds");
+      return;
+    }
+
+    const position = get().reactFlowInstance?.screenToFlowPosition({
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top
+    });
+
+    const newNode = {
+      id: get().getId(type),
+      type: type,
+      position,
+      data: {}
+    };
+
+    set({
+      nodes: (get().nodes ?? []).concat(newNode)
+    });
+  },
+
+  getId: (type: string) => {
+    let id = ulid();
+    return `dndnode_${type}_${id}`;
   }
 }));
