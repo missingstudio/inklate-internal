@@ -1,26 +1,23 @@
-import {
-  Background,
-  BackgroundVariant,
-  ConnectionLineType,
-  Edge,
-  Node,
-  ReactFlow,
-  useReactFlow
-} from "@xyflow/react";
-import { useGraphStore } from "~/store/graph-store";
+import { Background, BackgroundVariant, ConnectionLineType, ReactFlow } from "@xyflow/react";
+import { GraphStore, useGraphStore } from "~/store/graph-store";
 import { wrapNode } from "../nodes/wrap-node";
 import { BaseNode } from "../nodes/base-node";
+import { shallow } from "zustand/shallow";
+import { color } from "~/utils/colors";
 import { useTheme } from "next-themes";
 import "@xyflow/react/dist/style.css";
-import { color } from "~/lib/colors";
 import React from "react";
+
+const selectGraphState = (state: GraphStore) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange
+});
 
 export function Canvas() {
   const { theme } = useTheme();
-  const nodes = useGraphStore((state) => state.nodes);
-  const edges = useGraphStore((state) => state.edges);
-  const onNodesChange = useGraphStore((state) => state.onNodesChange);
-  const onEdgesChange = useGraphStore((state) => state.onEdgesChange);
+  const { nodes, edges, onNodesChange, onEdgesChange } = useGraphStore(selectGraphState, shallow);
 
   const nodeTypes = React.useMemo(
     () => ({

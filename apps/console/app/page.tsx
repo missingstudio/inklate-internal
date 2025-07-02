@@ -1,5 +1,5 @@
 import { MetaFunction, redirect } from "react-router";
-import { siteConfig } from "~/lib/site-config";
+import { siteConfig } from "~/utils/site-config";
 import { Home } from "~/components/home/home";
 import { authProxy } from "~/lib/auth-client";
 import type { Route } from "./+types/page";

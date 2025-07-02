@@ -6,8 +6,8 @@ import {
   applyEdgeChanges,
   EdgeChange
 } from "@xyflow/react";
+import { createWithEqualityFn } from "zustand/traditional";
 import { BaseNodeData } from "~/types/node";
-import { create } from "zustand";
 
 export type NodeId = string;
 export type EdgeId = string;
@@ -17,7 +17,7 @@ export type GraphState = {
   edges: Edge[];
 };
 
-interface GraphStore extends GraphState {
+export interface GraphStore extends GraphState {
   addNode: (node: Node) => void;
   removeNode: (nodeId: NodeId) => void;
   updateNode: (nodeId: NodeId, update: Partial<Node>) => void;
@@ -34,7 +34,7 @@ interface GraphStore extends GraphState {
   onEdgesChange: (changes: EdgeChange[]) => void;
 }
 
-export const useGraphStore = create<GraphStore>((set, get) => ({
+export const useGraphStore = createWithEqualityFn<GraphStore>((set, get) => ({
   nodes: [{ id: "1", type: "text", position: { x: 100, y: 100 }, data: { label: "1" } }],
   edges: [],
 

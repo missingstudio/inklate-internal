@@ -1,6 +1,6 @@
 import { Route } from "../../../(dashboard)/canvas/[canvasId]/+types/page";
 import { MetaFunction, redirect } from "react-router";
-import { siteConfig } from "~/lib/site-config";
+import { siteConfig } from "~/utils/site-config";
 import { authProxy } from "~/lib/auth-client";
 import { Canvas } from "~/components/canvas";
 

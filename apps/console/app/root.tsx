@@ -10,7 +10,7 @@ import {
 
 import { ServerProviders } from "~/providers/server-providers";
 import { ClientProviders } from "~/providers/client-providers";
-import { siteConfig } from "~/lib/site-config";
+import { siteConfig } from "~/utils/site-config";
 import type { Route } from "./+types/root";
 import "./app.css";
 import "~/i18n";
