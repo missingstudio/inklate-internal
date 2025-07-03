@@ -1,19 +1,6 @@
 "use client";
 
 import {
-  IconCamera,
-  IconChartBar,
-  IconFileStack,
-  IconFileAi,
-  IconFileDescription,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconSettings,
-  IconUsers
-} from "@tabler/icons-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -22,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "@inklate/ui/sidebar";
+import { IconFileStack, IconHelp, IconInnerShadowTop, IconSettings } from "@tabler/icons-react";
 import { NavMain } from "~/components/sidebar/nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
@@ -57,7 +45,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

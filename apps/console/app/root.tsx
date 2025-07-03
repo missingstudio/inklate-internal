@@ -12,7 +12,7 @@ import { ServerProviders } from "~/providers/server-providers";
 import { ClientProviders } from "~/providers/client-providers";
 import { siteConfig } from "~/utils/site-config";
 import type { Route } from "./+types/root";
-import "./app.css";
+import "./global.css";
 import "~/i18n";
 
 export const meta: MetaFunction = () => {
