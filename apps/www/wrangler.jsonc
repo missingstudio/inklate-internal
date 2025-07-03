@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "react-router-app",
+  "compatibility_date": "2025-04-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./workers/app.ts",
+  "env": {
+    "local": {
+      "vars": {
+        "VITE_PUBLIC_BACKEND_URL": "http://localhost:8787",
+        "VITE_PUBLIC_APP_URL": "http://localhost:3000"
+      }
+    }
+  }
+}
