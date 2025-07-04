@@ -1,7 +1,6 @@
 import { Route } from "../../../(dashboard)/canvas/[canvasId]/+types/page";
 import { MetaFunction, redirect } from "react-router";
 import { siteConfig } from "~/utils/site-config";
-import { authProxy } from "~/lib/auth-client";
 import { Canvas } from "~/components/canvas";
 
 export const meta: MetaFunction = () => {
@@ -13,13 +12,6 @@ export const meta: MetaFunction = () => {
     { property: "og:type", content: "website" }
   ];
 };
-
-export async function clientLoader({ request }: Route.ClientLoaderArgs) {
-  const session = await authProxy.api.getSession({ headers: request.headers });
-  if (!session?.user?.id) throw redirect("/signin");
-
-  return null;
-}
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
   return <Canvas />;

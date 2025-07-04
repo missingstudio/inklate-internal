@@ -1,5 +1,5 @@
+import { IconMail } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import { Mail } from "lucide-react";
 
 export const BotIcon = () => {
   return (
@@ -863,7 +863,7 @@ export const AnimatedMailIcon = ({ verified }: { verified: boolean }) => {
           }}
           className="text-primary"
         >
-          <Mail size={48} />
+          <IconMail size={48} />
         </motion.div>
         <motion.div
           initial={{ scale: 0 }}

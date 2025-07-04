@@ -12,6 +12,7 @@ import { CanvasState, useCanvasStore } from "~/store/canvas-store";
 import { wrapNode } from "~/components/nodes/wrap-node";
 import { BaseNode } from "~/components/nodes/base-node";
 import { canvasConfig } from "~/utils/canvas-config";
+import { TextNode } from "../nodes/text-node";
 import { shallow } from "zustand/shallow";
 import { color } from "~/utils/colors";
 import { useTheme } from "next-themes";
@@ -59,7 +60,8 @@ export function Canvas() {
 
   const nodeTypes = React.useMemo(
     () => ({
-      text: wrapNode(BaseNode)
+      text: wrapNode(BaseNode),
+      llm: wrapNode(TextNode)
     }),
     []
   );

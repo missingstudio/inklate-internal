@@ -4,6 +4,7 @@ export default [
   layout("layout.tsx", [
     index("page.tsx"),
     route("canvas", "(dashboard)/canvas/page.tsx"),
+    route("canvas/new", "(dashboard)/canvas/new-canvas.tsx"),
     route("canvas/:canvasId", "(dashboard)/canvas/[canvasId]/page.tsx")
   ]),
 

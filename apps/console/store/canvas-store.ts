@@ -56,7 +56,7 @@ export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get) => ({
   webSocketConnectionStatus: ReadyState.UNINSTANTIATED,
 
   // reactflow state
-  nodes: [{ id: "1", type: "text", position: { x: 100, y: 100 }, data: { label: "1" } }],
+  nodes: [],
   edges: [],
 
   getNode: (nodeId) => get().nodes.find((n: Node) => n.id === nodeId),

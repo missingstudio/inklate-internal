@@ -36,9 +36,9 @@ const categories = {
 const nodes = [
   {
     category: "text",
-    name: "Prompt",
+    name: "LLM",
     type: "text",
-    description: "Large Language Model",
+    description: "Run a prompt through an LLM.",
     icon: <IconPrompt />
   },
   {
