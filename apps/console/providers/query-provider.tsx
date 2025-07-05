@@ -80,12 +80,13 @@ const getUrl = () => import.meta.env.VITE_PUBLIC_BACKEND_URL + "/api/trpc";
 export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<AppRouter>();
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
-    loggerLink({ enabled: () => true }),
+    loggerLink({ enabled: () => false }),
     httpBatchLink({
       transformer: superjson,
       url: getUrl(),
       methodOverride: "POST",
-      maxItems: 1
+      maxItems: 1,
+      fetch: (url, options) => fetch(url, { ...options, credentials: "include" })
     })
   ]
 });

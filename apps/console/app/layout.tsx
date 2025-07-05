@@ -1,7 +1,18 @@
 import { SidebarInset, SidebarProvider } from "@inklate/ui/sidebar";
 import { AppNavigationBar } from "~/components/navigation-bar";
 import { AppSidebar } from "~/components/sidebar";
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
+import { authProxy } from "~/lib/auth-client";
+import type { Route } from "./+types/page";
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const session = await authProxy.api.getSession({ headers: request.headers });
+  if (!session) {
+    return Response.redirect(`${import.meta.env.VITE_PUBLIC_APP_URL}/login`);
+  }
+
+  return null;
+}
 
 export default function RootLayout() {
   return (

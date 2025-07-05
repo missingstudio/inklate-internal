@@ -1,20 +1,16 @@
+import { createTRPCRouter, publicProcedure, TrpcContext } from "./trpc";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import { createTRPCRouter, publicProcedure } from "./trpc";
-import type { TrpcContext } from "./trpc";
-import { env } from "cloudflare:workers";
 import { Context } from "hono";
-import { getDb } from "~/db";
 
 export const createTRPCContext = async (
   _: unknown,
   c: Context
 ): Promise<Omit<TrpcContext, "auth">> => {
-  const db = getDb(env.DATABASE_URL);
-  return { c, user: c.var["user"], db };
+  return { c, user: c.var["user"] };
 };
 
 export const appRouter = createTRPCRouter({
-  hello: publicProcedure.query(() => {
+  hello: publicProcedure.query(async () => {
     return { greeting: "Hello world" };
   })
 });
