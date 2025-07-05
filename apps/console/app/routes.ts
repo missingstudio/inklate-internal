@@ -11,6 +11,9 @@ export default [
   route("signin", "(auth)/signin/page.tsx"),
   route("signup", "(auth)/signup/page.tsx"),
   route("verify-email", "(auth)/verify-email/page.tsx"),
+  route("forget-password", "(auth)/forget-password/page.tsx"),
+  route("reset-password", "(auth)/reset-password/page.tsx"),
+  route("accept-invitation/:id", "(auth)/accept-invitation/[id]/page.tsx"),
 
   layout("(full-width)/layout.tsx", [
     route("terms", "(full-width)/terms.tsx"),

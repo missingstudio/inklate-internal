@@ -1,5 +1,7 @@
+import ResetPasswordEmail from "@inklate/email/reset-password-email";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import VerifyEmail from "@inklate/email/verify-email";
+import { organization } from "better-auth/plugins";
 import { betterAuth, User } from "better-auth";
 import { env } from "cloudflare:workers";
 import { sendEmail } from "./email";
@@ -27,7 +29,19 @@ export const authConfig = {
 
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }: { user: User; url: string }) => {
+      if (env.NODE_ENV === "development") {
+        console.log("Reset Password Link:", url);
+        return;
+      }
+
+      await sendEmail({
+        to: user.email,
+        subject: "[Inklate] Reset your password",
+        react: ResetPasswordEmail({ url: url, name: user.name })
+      });
+    }
   },
 
   emailVerification: {
@@ -55,7 +69,9 @@ export const authConfig = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET
     }
-  }
+  },
+
+  plugins: [organization()]
 };
 
 export function getAuth(databaseUrl: string) {

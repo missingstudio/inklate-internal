@@ -1,8 +1,10 @@
+import { organizationClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/client";
 
 export const authClient = createAuthClient({
   baseURL: import.meta.env.VITE_PUBLIC_BACKEND_URL,
-  credentials: "include"
+  credentials: "include",
+  plugins: [organizationClient()]
 });
 
 export const { signIn, signUp, signOut, useSession, getSession, $fetch } = authClient;

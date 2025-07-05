@@ -2,11 +2,11 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@inklate/ui/card";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { unwrapSafePromise } from "@inklate/common/promise";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { AnimatedMailIcon } from "~/components/icons";
 import { useMutation } from "@tanstack/react-query";
 import { authClient } from "~/lib/auth-client";
 import { useEffect, useState } from "react";
-import { AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 
@@ -71,7 +71,7 @@ const EmailNotificationAlert = () => {
       transition={{ delay: 0.4 }}
       className="bg-muted flex items-start gap-3 rounded-lg p-4"
     >
-      <AlertCircle className="mt-0.5 shrink-0 text-amber-500" />
+      <IconAlertCircle className="mt-0.5 shrink-0 text-amber-500" />
       <p className="text-muted-foreground text-xs">
         Don&apos;t see the email? Check your spam folder, just in case it ended up there.
       </p>

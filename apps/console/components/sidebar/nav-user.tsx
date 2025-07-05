@@ -19,6 +19,8 @@ import {
 } from "@inklate/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@inklate/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@inklate/ui/avatar";
+import { authClient } from "~/lib/auth-client";
+import { useNavigate } from "react-router";
 
 export function NavUser({
   user
@@ -30,7 +32,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const navigate = useNavigate();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -85,7 +87,17 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      navigate("/signin"); // redirect to login page
+                    }
+                  }
+                })
+              }
+            >
               <IconLogout />
               Log out
             </DropdownMenuItem>
