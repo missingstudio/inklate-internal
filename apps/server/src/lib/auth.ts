@@ -1,10 +1,13 @@
 import ResetPasswordEmail from "@inklate/email/reset-password-email";
+import InvitationEmail from "@inklate/email/invitation-email";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { betterAuth, Session, User } from "better-auth";
 import VerifyEmail from "@inklate/email/verify-email";
 import { organization } from "better-auth/plugins";
-import { betterAuth, User } from "better-auth";
 import { env } from "cloudflare:workers";
+import * as schema from "~/db/schema";
 import { sendEmail } from "./email";
+import { eq } from "drizzle-orm";
 import { getDb } from "~/db";
 
 export const authConfig = {
@@ -71,7 +74,56 @@ export const authConfig = {
     }
   },
 
-  plugins: [organization()]
+  plugins: [
+    organization({
+      async sendInvitationEmail(data) {
+        const url = new URL(`${env.VITE_PUBLIC_APP_URL}/accept-invitation/${data.id}`);
+
+        if (env.NODE_ENV === "development") {
+          console.log("Invitation Link:", url);
+          return;
+        }
+
+        await sendEmail({
+          to: data.email,
+          subject: "[Inklate] You've been invited to join a organization",
+          react: InvitationEmail({
+            inviteLink: url.href,
+            username: data.email,
+            invitedByUsername: data.inviter.user.name,
+            invitedByEmail: data.inviter.user.email,
+            teamName: data.organization.name
+          })
+        });
+      }
+    })
+  ],
+
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session: Session) => {
+          const organizationId = await getActiveOrganization(session.userId);
+          return {
+            data: {
+              ...session,
+              activeOrganizationId: organizationId
+            }
+          };
+        }
+      }
+    }
+  }
+};
+
+const getActiveOrganization = async (userId: string) => {
+  const db = getDb(env.DATABASE_URL);
+  const [organization] = await db
+    .select({ organizationId: schema.members.organizationId })
+    .from(schema.members)
+    .where(eq(schema.members.userId, userId))
+    .limit(1);
+  return organization?.organizationId;
 };
 
 export function getAuth(databaseUrl: string) {

@@ -1,8 +1,6 @@
 import { MetaFunction, redirect } from "react-router";
+import { Route } from "../(settings)/+types/page";
 import { siteConfig } from "~/utils/site-config";
-import { Home } from "~/components/home/home";
-import { authProxy } from "~/lib/auth-client";
-import type { Route } from "./+types/page";
 
 export const meta: MetaFunction = () => {
   return [
@@ -15,5 +13,5 @@ export const meta: MetaFunction = () => {
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
-  return <Home />;
+  return <div>Personal</div>;
 }

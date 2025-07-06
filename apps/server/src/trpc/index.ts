@@ -6,7 +6,7 @@ export const createTRPCContext = async (
   _: unknown,
   c: Context
 ): Promise<Omit<TrpcContext, "auth">> => {
-  return { c, user: c.var["user"] };
+  return { c, user: c.var["user"], session: c.var["session"] };
 };
 
 export const appRouter = createTRPCRouter({

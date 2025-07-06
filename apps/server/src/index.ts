@@ -16,6 +16,7 @@ export default class extends WorkerEntrypoint<typeof env> {
       const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
       c.set("auth", auth);
+      c.set("session", session?.session);
       c.set("user", session?.user);
 
       await next();

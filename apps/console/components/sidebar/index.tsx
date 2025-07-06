@@ -10,7 +10,10 @@ import {
   SidebarMenuItem
 } from "@inklate/ui/sidebar";
 import { IconFileStack, IconHelp, IconInnerShadowTop, IconSettings } from "@tabler/icons-react";
+import { OrganizationSwitcher } from "./organization-switcher";
+import { useOrganizations } from "~/hooks/use-organizations";
 import { NavMain } from "~/components/sidebar/nav-main";
+import { useSession } from "~/lib/auth-client";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import { Link } from "react-router";
@@ -44,26 +47,23 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { organizations, activeOrganization, setActiveOrganization } = useOrganizations();
+  const { data: session } = useSession();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <Link to="/">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Inklate Inc.</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <OrganizationSwitcher
+          organizations={organizations}
+          activeOrganization={activeOrganization}
+          setActiveOrganization={setActiveOrganization}
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={session?.user as any} />
       </SidebarFooter>
     </Sidebar>
   );
