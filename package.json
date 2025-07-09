@@ -8,7 +8,7 @@
     "check-types": "turbo run check-types",
     "check:format": "prettier . --check",
     "check": "bun run check:format && bun run lint",
-    "lint-staged": "prettier . --write --ignore-unknown",
+    "lint-staged": "prettier . --write --ignore-unknown --log-level silent",
     "format": "prettier . --write \"**/*.{ts,tsx,md}\" --log-level silent",
     "docker:db:up": "docker compose -f docker-compose.db.yaml up -d",
     "docker:db:stop": "docker compose -f docker-compose.db.yaml stop",

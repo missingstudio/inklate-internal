@@ -8,6 +8,7 @@ import { env } from "cloudflare:workers";
 import * as schema from "~/db/schema";
 import { sendEmail } from "./email";
 import { eq } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { getDb } from "~/db";
 
 export const authConfig = {
@@ -100,6 +101,31 @@ export const authConfig = {
   ],
 
   databaseHooks: {
+    user: {
+      create: {
+        after: async (user: User) => {
+          const db = getDb(env.DATABASE_URL);
+          const [organization] = await db
+            .insert(schema.organizations)
+            .values({
+              id: user.id,
+              name: "Personal",
+              slug: user.id,
+              logo: null,
+              createdAt: new Date()
+            })
+            .returning();
+
+          await db.insert(schema.members).values({
+            id: nanoid(),
+            userId: user.id,
+            organizationId: organization?.id!,
+            role: "owner",
+            createdAt: new Date()
+          });
+        }
+      }
+    },
     session: {
       create: {
         before: async (session: Session) => {

@@ -54,3 +54,4 @@ worker-configuration.d.ts
 
 # devcontainer
 .pnpm-store
+.cursor
