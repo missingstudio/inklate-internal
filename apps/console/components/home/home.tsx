@@ -1,6 +1,6 @@
-import { useTRPC } from "~/providers/query-provider";
 import { IconBrandEmber } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@inklate/common/trpc";
 import { Button } from "@inklate/ui/button";
 import { useNavigate } from "react-router";
 

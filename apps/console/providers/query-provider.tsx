@@ -3,11 +3,10 @@ import {
   type PersistedClient,
   type Persister
 } from "@tanstack/react-query-persist-client";
-import { hashKey, isServer, QueryCache, QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import { createTRPCContext } from "@trpc/tanstack-react-query";
+import { TRPCProvider } from "@inklate/common/trpc";
+import { getQueryClient } from "~/lib/trpc/react";
 import { AppRouter } from "@inklate/server/trpc";
-import { signOut } from "~/lib/auth-client";
 import { get, set, del } from "idb-keyval";
 import superjson from "superjson";
 
@@ -29,55 +28,7 @@ export function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery") {
   } as Persister;
 }
 
-export const makeQueryClient = () =>
-  new QueryClient({
-    queryCache: new QueryCache({
-      onError: (err, { meta }) => {
-        if (meta && meta.noGlobalError === true) return;
-        if (meta && typeof meta.customError === "string") console.error(meta.customError);
-        else if (err.message === "Required scopes missing") {
-          signOut({
-            fetchOptions: {
-              onSuccess: () => {
-                if (window.location.href.includes("/signin")) return;
-                window.location.href = "/signin?error=required_scopes_missing";
-              }
-            }
-          });
-        } else console.error(err.message || "Something went wrong");
-      }
-    }),
-    defaultOptions: {
-      queries: {
-        retry: false,
-        refetchOnWindowFocus: false,
-        queryKeyHashFn: (queryKey) => hashKey(queryKey),
-        gcTime: 1000 * 60 * 60 * 24
-      },
-      mutations: {
-        onError: (err) => console.error(err.message)
-      }
-    }
-  });
-
-let browserQueryClient: QueryClient | undefined;
-function getQueryClient() {
-  if (isServer) {
-    // Server: always make a new query client
-    return makeQueryClient();
-  }
-
-  // Browser: make a new query client if we don't already have one
-  // This is very important, so we don't re-make a new client if React
-  // suspends during the initial render. This may not be needed if we
-  // have a suspense boundary BELOW the creation of the query client
-  if (!browserQueryClient) browserQueryClient = makeQueryClient();
-
-  return browserQueryClient;
-}
-
 const getUrl = () => import.meta.env.VITE_PUBLIC_BACKEND_URL + "/api/trpc";
-export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<AppRouter>();
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
     loggerLink({ enabled: () => false }),

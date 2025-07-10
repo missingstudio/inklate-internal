@@ -8,6 +8,7 @@ import {
   ScrollRestoration
 } from "react-router";
 
+import { ServerProviders } from "~/providers/server-providers";
 import { ClientProviders } from "~/providers/client-providers";
 import { siteConfig } from "~/utils/site-config";
 import type { Route } from "./+types/root";
@@ -47,7 +48,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="antialiased">
-        <ClientProviders>{children}</ClientProviders>
+        <ServerProviders>
+          <ClientProviders>{children}</ClientProviders>
+        </ServerProviders>
         <ScrollRestoration />
         <Scripts />
       </body>

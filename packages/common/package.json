@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./trpc": "./src/trpc.ts",
     "./time": "./src/time.ts",
     "./promise": "./src/promise.ts",
     "./generate-id": "./src/generate-id.ts"
   },
   "devDependencies": {
+    "@inklate/server": "workspace:*",
     "nanoid": "^5.1.5",
     "uuid": "^11.1.0"
   }
