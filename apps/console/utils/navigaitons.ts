@@ -2,9 +2,9 @@ import {
   IconArrowLeft,
   IconCreditCard,
   IconDashboard,
-  IconSettings,
   IconUser,
-  IconUsers
+  IconUsers,
+  IconMail
 } from "@tabler/icons-react";
 
 interface NavSection {
@@ -32,30 +32,13 @@ export const navigationConfig: Record<string, NavConfig> = {
     path: "/canvas",
     sections: [
       {
-        title: "Core",
+        title: "Home",
         items: [
           {
             title: "My files",
             url: "/",
             icon: IconDashboard,
             shortcut: "⌘D"
-          }
-        ]
-      },
-      {
-        title: "Manage",
-        items: [
-          {
-            title: "Members",
-            url: "/settings/members",
-            icon: IconUsers,
-            shortcut: "⌘M"
-          },
-          {
-            title: "Billing",
-            url: "/settings/billing",
-            icon: IconCreditCard,
-            shortcut: "⌘B"
           }
         ]
       }
@@ -66,36 +49,25 @@ export const navigationConfig: Record<string, NavConfig> = {
     path: "/settings",
     sections: [
       {
-        title: "Core",
+        title: "Navigation",
         items: [
           {
-            title: "Back",
+            title: "Back to Canvas",
             url: "/",
             icon: IconArrowLeft,
-            isBackButton: true
-          },
-          {
-            title: "Personal",
-            url: "/",
-            icon: IconUser,
-            shortcut: "⌘P"
+            isBackButton: true,
+            shortcut: "⌘←"
           }
         ]
       },
       {
-        title: "Manage",
+        title: "Account",
         items: [
           {
-            title: "Members",
-            url: "/settings/members",
-            icon: IconUsers,
-            shortcut: "⌘M"
-          },
-          {
-            title: "Billing",
-            url: "/settings/billing",
-            icon: IconCreditCard,
-            shortcut: "⌘B"
+            title: "Profile",
+            url: "/settings/profile",
+            icon: IconUser,
+            shortcut: "⌘P"
           }
         ]
       }

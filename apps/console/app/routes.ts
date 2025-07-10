@@ -19,7 +19,12 @@ export default [
     ]),
     layout(
       "(dashboard)/settings/layout.tsx",
-      prefix("settings", [index("(dashboard)/settings/page.tsx")])
+      prefix("settings", [
+        index("(dashboard)/settings/page.tsx"),
+
+        // Account Settings
+        route("profile", "(dashboard)/settings/profile/page.tsx")
+      ])
     )
   ]),
 

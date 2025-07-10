@@ -59,7 +59,9 @@ export function AppNavigationBar() {
 }
 
 const breadcrumbsMap: Record<string, string> = {
-  canvas: "Canvas"
+  canvas: "Canvas",
+  settings: "Settings",
+  profile: "Profile"
 };
 
 function capitalize(text: string) {

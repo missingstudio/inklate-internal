@@ -19,7 +19,7 @@ const data = {
     },
     {
       title: "Get Help",
-      url: "/help",
+      url: "#",
       icon: IconHelp
     }
   ]
