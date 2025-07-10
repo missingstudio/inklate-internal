@@ -1,5 +1,6 @@
 import { createTRPCRouter, publicProcedure, TrpcContext } from "./trpc";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import { waitlistRouter } from "./routers/waitlist";
 import { Context } from "hono";
 
 export const createTRPCContext = async (
@@ -12,7 +13,8 @@ export const createTRPCContext = async (
 export const appRouter = createTRPCRouter({
   hello: publicProcedure.query(async () => {
     return { greeting: "Hello world" };
-  })
+  }),
+  waitlist: waitlistRouter
 });
 
 export type AppRouter = typeof appRouter;
