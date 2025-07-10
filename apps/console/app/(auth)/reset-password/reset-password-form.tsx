@@ -27,7 +27,7 @@ export function ResetPasswordForm({ className, ...props }: React.ComponentProps<
         })
       );
     },
-    onSuccess: () => navigate("/signin"),
+    onSuccess: () => navigate("/login"),
     onError: (error) => toast.error(error.message)
   });
 

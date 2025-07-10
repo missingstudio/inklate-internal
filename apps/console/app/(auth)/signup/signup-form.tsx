@@ -66,8 +66,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
               <EmailProvider form={form} signupMutation={typedMutation} />
               <div className="text-center text-sm">
                 Already have an account?{" "}
-                <Link to="/signin" className="underline underline-offset-4">
-                  Sign In
+                <Link to="/login" className="underline underline-offset-4">
+                  Log in
                 </Link>
               </div>
             </form>

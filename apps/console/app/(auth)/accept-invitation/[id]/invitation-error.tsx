@@ -38,9 +38,9 @@ export function InvitationError() {
         </p>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Link to="/signin" className="w-full max-w-xs">
+        <Link to="/login" className="w-full max-w-xs">
           <Button size="sm" className="w-full">
-            Back to Sign In
+            Back to Log in
           </Button>
         </Link>
       </CardFooter>

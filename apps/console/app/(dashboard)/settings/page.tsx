@@ -1,5 +1,5 @@
+import { Route } from "../../(dashboard)/settings/+types/page";
 import { MetaFunction, redirect } from "react-router";
-import { Route } from "../(settings)/+types/page";
 import { siteConfig } from "~/utils/site-config";
 
 export const meta: MetaFunction = () => {

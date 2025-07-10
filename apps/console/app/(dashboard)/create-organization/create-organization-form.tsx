@@ -1,8 +1,7 @@
 "use client";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@inklate/ui/form";
-import { organizationCreationSchema, SigninType } from "~/app/(auth)/types";
-import { useOrganizations } from "~/hooks/use-organizations";
+import { organizationCreationSchema } from "~/app/(auth)/types";
 import { unwrapSafePromise } from "@inklate/common/promise";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -25,7 +24,6 @@ export function CreateOrganizationForm({
   onSuccess?: () => void;
 }) {
   const navigate = useNavigate();
-  const { setActiveOrganization } = useOrganizations();
   const form = useForm<z.infer<typeof organizationCreationSchema>>({
     resolver: zodResolver(organizationCreationSchema, undefined, { mode: "async" }),
     reValidateMode: "onBlur",

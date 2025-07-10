@@ -96,7 +96,7 @@ export function NavUser({
                 authClient.signOut({
                   fetchOptions: {
                     onSuccess: () => {
-                      navigate("/signin"); // redirect to login page
+                      navigate("/login"); // redirect to login page
                     }
                   }
                 })

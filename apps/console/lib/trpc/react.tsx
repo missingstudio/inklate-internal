@@ -11,8 +11,8 @@ export const makeQueryClient = () =>
           signOut({
             fetchOptions: {
               onSuccess: () => {
-                if (window.location.href.includes("/signin")) return;
-                window.location.href = "/signin?error=required_scopes_missing";
+                if (window.location.href.includes("/login")) return;
+                window.location.href = "/login?error=required_scopes_missing";
               }
             }
           });

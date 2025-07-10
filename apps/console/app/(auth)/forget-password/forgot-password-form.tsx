@@ -92,8 +92,8 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 
               <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link to="/signin" className="underline underline-offset-4">
-                  Back to sign in
+                <Link to="/login" className="underline underline-offset-4">
+                  Back to log in
                 </Link>
               </div>
             </form>

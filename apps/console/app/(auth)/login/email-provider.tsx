@@ -2,16 +2,16 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@inkla
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@inklate/ui/button";
-import type { SigninType } from "../types";
 import { Input } from "@inklate/ui/input";
+import type { LoginType } from "../types";
 import { Link } from "react-router";
 
 export function EmailProvider({
   form,
-  signInMutation
+  loginMutation
 }: {
-  form: UseFormReturn<SigninType>;
-  signInMutation: UseMutationResult<void, Error, SigninType>;
+  form: UseFormReturn<LoginType>;
+  loginMutation: UseMutationResult<void, Error, LoginType>;
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -25,7 +25,7 @@ export function EmailProvider({
               <Input
                 placeholder="m@example.com"
                 type="text"
-                disabled={signInMutation.isPending}
+                disabled={loginMutation.isPending}
                 {...field}
               />
             </FormControl>
@@ -48,7 +48,7 @@ export function EmailProvider({
               <Input
                 placeholder="****"
                 type="password"
-                disabled={signInMutation.isPending}
+                disabled={loginMutation.isPending}
                 {...field}
               />
             </FormControl>
@@ -57,8 +57,8 @@ export function EmailProvider({
         )}
       />
 
-      <Button type="submit" className="w-full" disabled={signInMutation.isPending}>
-        {signInMutation.isPending ? "Signing in..." : "Sign In"}
+      <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+        {loginMutation.isPending ? "Logging in..." : "Log in"}
       </Button>
     </div>
   );

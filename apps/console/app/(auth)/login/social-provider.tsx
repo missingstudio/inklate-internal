@@ -1,12 +1,12 @@
 import type { UseMutationResult } from "@tanstack/react-query";
 import { authClient } from "~/lib/auth-client";
 import { Button } from "@inklate/ui/button";
-import type { SigninType } from "../types";
+import type { LoginType } from "../types";
 
 export function SocialProviders({
-  signInMutation
+  loginMutation
 }: {
-  signInMutation: UseMutationResult<void, Error, SigninType>;
+  loginMutation: UseMutationResult<void, Error, LoginType>;
 }) {
   return (
     <div className="flex">
@@ -21,7 +21,7 @@ export function SocialProviders({
         variant="outline"
         className="w-full"
         type="button"
-        disabled={signInMutation.isPending}
+        disabled={loginMutation.isPending}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="0.98em" height="1em" viewBox="0 0 256 262">
           <path
