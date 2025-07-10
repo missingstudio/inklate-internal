@@ -1,11 +1,13 @@
+import { useTRPC } from "~/providers/query-provider";
 import { IconBrandEmber } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@inklate/ui/button";
 import { useNavigate } from "react-router";
 
 export function Home() {
-  // const trpc = useTRPC();
-  // const helloQuery = trpc.hello.queryOptions();
-  // const { data, isLoading, error } = useQuery(helloQuery);
+  const trpc = useTRPC();
+  const helloQuery = trpc.hello.queryOptions();
+  const { data, isLoading, error } = useQuery(helloQuery);
 
   const navigate = useNavigate();
   return (
@@ -18,7 +20,7 @@ export function Home() {
           variant="default"
           className="cursor-pointer"
         >
-          Create a new canvas
+          Create a new canvas {data?.greeting}
         </Button>
       </div>
     </div>

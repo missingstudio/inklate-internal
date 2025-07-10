@@ -37,6 +37,6 @@
     "@types/nodemailer": "^6.4.17",
     "drizzle-kit": "^0.31.4",
     "vitest": "^3.2.4",
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.24.0"
   }
 }
