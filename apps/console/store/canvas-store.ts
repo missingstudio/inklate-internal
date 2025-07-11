@@ -127,32 +127,36 @@ export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get) => ({
       event.dataTransfer.dropEffect = "move";
     }
   },
-  onDrop: (event: any) => {
+  onDrop: async (event: any) => {
     event.preventDefault();
     const reactFlowBounds = get().reactFlowWrapper?.getBoundingClientRect();
     const type = event.dataTransfer?.getData("application/reactflow");
 
-    // check if the dropped element is valid
-    if (typeof type === "undefined" || !type) {
-      console.log("Invalid type");
-      return;
-    }
-
-    if (!reactFlowBounds) {
-      console.log("Invalid reactFlowBounds");
-      return;
-    }
+    if (typeof type === "undefined" || !type) return;
+    if (!reactFlowBounds) return;
 
     const position = get().reactFlowInstance?.screenToFlowPosition({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top
     });
 
-    const newNode = {
+    const createNodeData = async (nodeType: string) => {
+      switch (nodeType) {
+        case "llm":
+          const { createLLMNodeData } = await import("~/components/nodes/llm-node");
+          return createLLMNodeData();
+        case "text":
+          const { createTextNodeData } = await import("~/components/nodes/text-node");
+          return createTextNodeData();
+      }
+    };
+
+    const data = await createNodeData(type);
+    const newNode: Node = {
       id: get().getId(type),
       type: type,
       position,
-      data: {}
+      data: data ?? {}
     };
 
     set({

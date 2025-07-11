@@ -7,12 +7,12 @@ import {
   ReactFlow,
   useReactFlow
 } from "@xyflow/react";
-import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { CanvasState, useCanvasStore } from "~/store/canvas-store";
 import { wrapNode } from "~/components/nodes/wrap-node";
-import { BaseNode } from "~/components/nodes/base-node";
 import { canvasConfig } from "~/utils/canvas-config";
+import React, { useEffect, useRef } from "react";
 import { TextNode } from "../nodes/text-node";
+import { LLMNode } from "../nodes/llm-node";
 import { shallow } from "zustand/shallow";
 import { color } from "~/utils/colors";
 import { useTheme } from "next-themes";
@@ -60,8 +60,22 @@ export function Canvas() {
 
   const nodeTypes = React.useMemo(
     () => ({
-      text: wrapNode(BaseNode),
-      llm: wrapNode(TextNode)
+      llm: wrapNode(LLMNode, {
+        enableErrorBoundary: true,
+        enableLoadingState: true,
+        enableSelection: true,
+        enableDragging: true,
+        minWidth: 280,
+        minHeight: 80
+      }),
+      text: wrapNode(TextNode, {
+        enableErrorBoundary: true,
+        enableLoadingState: true,
+        enableSelection: true,
+        enableDragging: true,
+        minWidth: 280,
+        minHeight: 80
+      })
     }),
     []
   );

@@ -37,7 +37,7 @@ const nodes = [
   {
     category: "text",
     name: "LLM",
-    type: "text",
+    type: "llm",
     description: "Run a prompt through an LLM.",
     icon: <IconPrompt />
   },
@@ -47,13 +47,6 @@ const nodes = [
     type: "text",
     description: "Generate images with GPT",
     icon: <IconPhoto />
-  },
-  {
-    category: "audio",
-    name: "GPT Audio",
-    type: "text",
-    description: "Generate audio with GPT",
-    icon: <IconHeadphones />
   }
 ];
 
