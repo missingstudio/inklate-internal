@@ -1,34 +1,35 @@
 import { type WrappedNodeProps, Node } from "./wrap-node";
-import { Textarea } from "@inklate/ui/textarea";
+import { generateId } from "@inklate/common/generate-id";
+import { HandleType } from "~/enums/handle-type.enum";
 import { Button } from "@inklate/ui/button";
 import { BaseNodeData } from "~/types/node";
 import React, { useCallback } from "react";
 
-interface TextNodeData extends BaseNodeData {
+interface DisplayNodeData extends BaseNodeData {
   text: string;
   wordCount?: number;
   characterCount?: number;
 }
 
-export function createTextNodeData(): TextNodeData {
+export function createDisplayNodeData(): DisplayNodeData {
   return {
     version: 1,
     color: "#ffffff",
-    name: "Text Node",
-    description: "A simple text input node.",
-    type: "text",
+    name: "Display Node",
+    description: "A node that displays text received from other nodes.",
+    type: "display",
     handles: {
-      input: {},
-      output: {
+      input: {
         text: {
-          id: "text",
-          description: "Text output",
-          format: "text",
+          id: `output-${generateId({ use: "nanoid", kind: "edge" })}`,
+          description: "Response input to display",
+          format: HandleType.Text,
           label: "Text",
-          order: 0,
+          order: 1,
           required: false
         }
-      }
+      },
+      output: {}
     },
     loading: false,
     error: null,
@@ -38,58 +39,63 @@ export function createTextNodeData(): TextNodeData {
   };
 }
 
-export const TextNode = ({
+export const DisplayNode = ({
   id,
   data,
   updateData,
   selected,
   dragging
-}: WrappedNodeProps<TextNodeData>) => {
-  const onTextChange = useCallback(
-    (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const newText = evt.target.value;
-      updateData({
-        text: newText,
-        wordCount: newText
-          .trim()
-          .split(/\s+/)
-          .filter((word) => word.length > 0).length,
-        characterCount: newText.length
-      });
-    },
-    [updateData]
-  );
-
+}: WrappedNodeProps<DisplayNodeData>) => {
   const clearText = useCallback(() => {
     updateData({ text: "", wordCount: 0, characterCount: 0 });
   }, [updateData]);
 
+  // Calculate word and character counts when text changes
+  React.useEffect(() => {
+    if (data.text) {
+      const wordCount = data.text
+        .trim()
+        .split(/\s+/)
+        .filter((word) => word.length > 0).length;
+      const characterCount = data.text.length;
+
+      if (data.wordCount !== wordCount || data.characterCount !== characterCount) {
+        updateData({
+          wordCount,
+          characterCount,
+          lastUpdated: Date.now()
+        });
+      }
+    }
+  }, [data.text, data.wordCount, data.characterCount, updateData]);
+
   return (
     <Node className={dragging ? "opacity-70" : ""}>
       <Node.Header
-        title="Text Node"
-        subtitle="Simple text input and output"
+        title="Display Node"
+        subtitle="Displays text from connected nodes"
         loading={data.loading}
         error={data.error}
         onClearError={() => updateData({ error: null })}
         icon={
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-            <span className="text-xs font-semibold text-blue-600">T</span>
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
+            <span className="text-xs font-semibold text-green-600">D</span>
           </div>
         }
       />
 
       <Node.Content>
         <div>
-          <label className="mb-2 block text-xs font-semibold text-gray-700">TEXT CONTENT</label>
-          <Textarea
-            className="field-sizing-content max-h-40 min-h-20 resize-none"
-            rows={3}
-            placeholder="Enter your text here..."
-            value={data.text || ""}
-            onChange={onTextChange}
-            disabled={data.loading}
-          />
+          <label className="mb-2 block text-xs font-semibold text-gray-700">DISPLAY CONTENT</label>
+          <div className="max-h-40 min-h-20 overflow-y-auto rounded-md border border-gray-200 bg-gray-50 p-3 text-sm">
+            {data.text ? (
+              <div className="break-words whitespace-pre-wrap text-gray-900">{data.text}</div>
+            ) : (
+              <div className="text-gray-400 italic">
+                No text received. Connect a text output from another node.
+              </div>
+            )}
+          </div>
         </div>
       </Node.Content>
 
@@ -118,4 +124,8 @@ export const TextNode = ({
   );
 };
 
-TextNode.displayName = "TextNode";
+DisplayNode.displayName = "DisplayNode";
+
+// Export both the old TextNode name for backward compatibility and new DisplayNode name
+export const TextNode = DisplayNode;
+export { createDisplayNodeData as createTextNodeData };

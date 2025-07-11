@@ -6,7 +6,14 @@ import {
   CommandGroup,
   CommandItem
 } from "@inklate/ui/command";
-import { IconEdit, IconHeadphones, IconPhoto, IconPrompt, IconVideo } from "@tabler/icons-react";
+import {
+  IconEdit,
+  IconHeadphones,
+  IconPhoto,
+  IconPrompt,
+  IconTextPlus,
+  IconVideo
+} from "@tabler/icons-react";
 import { Panel } from "@xyflow/react";
 import { DragEvent } from "react";
 
@@ -42,11 +49,11 @@ const nodes = [
     icon: <IconPrompt />
   },
   {
-    category: "image",
-    name: "GPT Image",
+    category: "text",
+    name: "Display",
     type: "text",
-    description: "Generate images with GPT",
-    icon: <IconPhoto />
+    description: "Display text from connected nodes.",
+    icon: <IconTextPlus />
   }
 ];
 
@@ -55,9 +62,19 @@ const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
   event.dataTransfer.effectAllowed = "move";
 };
 
+const onDragOver = (event: DragEvent<HTMLDivElement>) => {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "none";
+};
+
+const onDrop = (event: DragEvent<HTMLDivElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+
 export const Sidebar = () => {
   return (
-    <Panel position="top-left">
+    <Panel position="top-left" onDragOver={onDragOver} onDrop={onDrop}>
       <Command>
         <CommandInput placeholder="Search..." />
         <CommandList>
@@ -66,13 +83,13 @@ export const Sidebar = () => {
             {nodes.map((node) => (
               <CommandItem
                 key={node.name}
-                className="dndnode max-w-[220px] !px-0 aria-selected:bg-transparent"
+                className="dndnode max-w-[220px] !px-0 active:opacity-90 aria-selected:bg-transparent"
                 onDragStart={(event: DragEvent<HTMLDivElement>) => onDragStart(event, node.type)}
                 draggable
               >
                 <div
                   key={node.name}
-                  className={`input cursor-grab ${node.name} border-foreground/1 flex h-fit w-full flex-row items-center gap-2 rounded-md border-[1px] border-solid p-3`}
+                  className={`input cursor-grab ${node.name} border-foreground/1 flex h-fit w-full flex-row items-center gap-2 border-[1px] border-solid p-3`}
                 >
                   <div className="text-foreground">{node.icon}</div>
                   <div>

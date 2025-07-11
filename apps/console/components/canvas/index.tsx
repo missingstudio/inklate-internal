@@ -24,6 +24,7 @@ const selectGraphState = (state: CanvasState) => ({
   edges: state.edges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
   setReactFlowWrapper: state.setReactFlowWrapper,
   setReactFlowInstance: state.setReactFlowInstance,
   onDragOver: state.onDragOver,
@@ -44,6 +45,7 @@ export function Canvas() {
     edges,
     onNodesChange,
     onEdgesChange,
+    onConnect,
     setReactFlowWrapper,
     setReactFlowInstance,
     ...rest
@@ -60,22 +62,8 @@ export function Canvas() {
 
   const nodeTypes = React.useMemo(
     () => ({
-      llm: wrapNode(LLMNode, {
-        enableErrorBoundary: true,
-        enableLoadingState: true,
-        enableSelection: true,
-        enableDragging: true,
-        minWidth: 280,
-        minHeight: 80
-      }),
-      text: wrapNode(TextNode, {
-        enableErrorBoundary: true,
-        enableLoadingState: true,
-        enableSelection: true,
-        enableDragging: true,
-        minWidth: 280,
-        minHeight: 80
-      })
+      llm: wrapNode(LLMNode),
+      text: wrapNode(TextNode)
     }),
     []
   );
@@ -87,6 +75,7 @@ export function Canvas() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitViewOptions={{ padding: 0.2, maxZoom: 1 }}
         snapGrid={[10, 10]}

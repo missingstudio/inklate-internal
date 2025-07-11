@@ -21,7 +21,7 @@ export interface BaseNodeData {
   description: string;
   type: string;
 
-  handles: { input: Record<string, Handle> | string[]; output: Record<string, Handle> | string[] };
+  handles: { input: Record<string, Handle>; output: Record<string, Handle> };
   input?: Record<string, any> | any[];
   output?: Record<string, any> | any[];
   result?: unknown;

@@ -144,7 +144,7 @@ const NodeComponent = ({ className, children }: NodeComponentProps) => {
     <div
       className={cn(
         "w-80 max-w-sm rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200",
-        selected && "ring-2 ring-blue-500",
+        selected && "border-t-2 border-t-blue-500",
         dragging && "opacity-80",
         className
       )}
@@ -239,14 +239,16 @@ const NodeFooter = ({
               Updated: {new Date(finalUpdatedAt).toLocaleTimeString()}
             </span>
           )}
-          {usage && usage.totalTokens && (
-            <span className="truncate">
-              Tokens: {usage.totalTokens} ({usage.inputTokens}↑ {usage.outputTokens}↓)
-            </span>
-          )}
           {customInfo && <div className="truncate">{customInfo}</div>}
         </div>
         {actions && <div className="ml-2 flex-shrink-0">{actions}</div>}
+      </div>
+      <div className="flex items-center justify-between text-xs text-gray-500">
+        {usage && usage.totalTokens && (
+          <span className="truncate">
+            Tokens: {usage.totalTokens} ({usage.inputTokens}↑ {usage.outputTokens}↓)
+          </span>
+        )}
       </div>
     </div>
   );

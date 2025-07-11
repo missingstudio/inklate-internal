@@ -2,6 +2,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@inklate/ui/select";
 import React, { useCallback, useState, useEffect } from "react";
 import { type WrappedNodeProps, Node } from "./wrap-node";
+import { generateId } from "@inklate/common/generate-id";
+import { HandleType } from "~/enums/handle-type.enum";
+import { useCanvasStore } from "~/store/canvas-store";
 import { useTRPCClient } from "@inklate/common/trpc";
 import { useQuery } from "@tanstack/react-query";
 import { Textarea } from "@inklate/ui/textarea";
@@ -15,9 +18,7 @@ interface LLMNodeData extends BaseNodeData {
   content?: JSONContent;
   model?: string;
   updatedAt?: string;
-  response?: {
-    text: string;
-  };
+  response?: string;
   usage?: {
     inputTokens?: number;
     outputTokens?: number;
@@ -35,9 +36,9 @@ export function createLLMNodeData(): LLMNodeData {
     handles: {
       input: {
         prompt: {
-          id: "prompt",
+          id: `input-${generateId({ use: "nanoid", kind: "edge" })}`,
           description: "Prompt input",
-          format: "text",
+          format: HandleType.Text,
           label: "Prompt",
           order: 0,
           required: true
@@ -45,10 +46,10 @@ export function createLLMNodeData(): LLMNodeData {
       },
       output: {
         response: {
-          id: "response",
+          id: `output-${generateId({ use: "nanoid", kind: "edge" })}`,
           description: "LLM response",
-          format: "text",
-          label: "Response",
+          format: HandleType.Text,
+          label: "Text",
           order: 0,
           required: false
         }
@@ -67,10 +68,15 @@ export const LLMNode = ({
   id,
   data,
   updateData,
+  dragging,
   selected,
-  dragging
+  deleteNode
 }: WrappedNodeProps<LLMNodeData>) => {
   const [model, setModel] = useState(data.model || "gpt-4o");
+
+  // Get canvas store for data transfer
+  const edges = useCanvasStore((state) => state.edges);
+  const transferData = useCanvasStore((state) => state.transferData);
 
   const trpcClient = useTRPCClient();
   const { data: modelsData } = useQuery({
@@ -88,7 +94,7 @@ export const LLMNode = ({
       },
       onFinish: (message) => {
         updateData({
-          response: { text: message.content },
+          response: message.content,
           usage: {
             inputTokens: Math.floor(data.text.length / 4),
             outputTokens: Math.floor(message.content.length / 4),
@@ -96,6 +102,17 @@ export const LLMNode = ({
           },
           loading: false,
           updatedAt: new Date().toISOString()
+        });
+
+        // Transfer data to connected display nodes
+        const connectedEdges = edges.filter(
+          (edge) => edge.source === id && edge.sourceHandle === "response"
+        );
+
+        connectedEdges.forEach((edge) => {
+          if (edge.target && edge.targetHandle) {
+            transferData(id, edge.target);
+          }
         });
       },
       onError: (error) => {
@@ -107,7 +124,7 @@ export const LLMNode = ({
     });
 
   const latestResponse =
-    messages.filter((m) => m.role === "assistant").pop()?.content || data.response?.text;
+    messages.filter((m) => m.role === "assistant").pop()?.content || data.response;
   const onPromptChange = useCallback(
     (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
       const value = evt.target.value;
@@ -211,7 +228,6 @@ export const LLMNode = ({
       <Node.Footer
         updatedAt={data.updatedAt}
         usage={data.usage}
-        customInfo={<span className="text-xs text-blue-600">{data.model || "gpt-4o"}</span>}
         actions={
           <Button
             size="sm"
