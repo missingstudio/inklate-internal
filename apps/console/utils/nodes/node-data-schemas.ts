@@ -195,9 +195,6 @@ export const validateDataTransfer = (
 
     // Convert source data to target format
     const convertedData = convertToNodeData(sourceData, targetHandle.format);
-    console.log(sourceData, targetHandle.format, convertedData);
-
-    // Validate the converted data
     const validatedData = NodeDataSchema.parse(convertedData);
 
     return {

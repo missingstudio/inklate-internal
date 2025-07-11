@@ -20,7 +20,6 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
   const navigate = useNavigate();
   const forgotPasswordMutation = useMutation({
     mutationFn: async (values: ForgotPasswordType) => {
-      console.log(values);
       await unwrapSafePromise(
         authClient.forgetPassword({
           email: values.email,

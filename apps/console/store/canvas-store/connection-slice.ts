@@ -51,8 +51,6 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       return;
     }
 
-    console.log(sourceHandle, targetHandle);
-
     // Validate handle compatibility using the new handle registry
     if (!isHandleCompatible(sourceHandle.type, targetHandle.type)) {
       toast.error(
