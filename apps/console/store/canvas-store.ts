@@ -15,6 +15,7 @@ import {
   Connection,
   addEdge
 } from "@xyflow/react";
+import { nodeRegistry } from "~/utils/nodes/node-registry";
 import { createWithEqualityFn } from "zustand/traditional";
 import { HandleType } from "~/enums/handle-type.enum";
 import { ReadyState } from "react-use-websocket";
@@ -269,23 +270,25 @@ export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get) => ({
       y: event.clientY - reactFlowBounds.top
     });
 
-    const createNodeData = async (nodeType: string) => {
-      switch (nodeType) {
-        case "llm":
-          const { createLLMNodeData } = await import("~/components/nodes/llm-node");
-          return createLLMNodeData();
-        case "text":
-          const { createTextNodeData } = await import("~/components/nodes/text-node");
-          return createTextNodeData();
-      }
-    };
+    // Use the node registry to create node with default data
+    const nodeDefinition = nodeRegistry.get(type);
+    if (!nodeDefinition) {
+      console.error(`Unknown node type: ${type}`);
+      return;
+    }
 
-    const data = await createNodeData(type);
     const newNode: Node = {
       id: get().getId(type),
       type: type,
       position,
-      data: data ?? {}
+      data: {
+        ...nodeDefinition.defaultData,
+        id: get().getId(type),
+        type: type,
+        name: nodeDefinition.name,
+        description: nodeDefinition.description,
+        lastUpdated: Date.now()
+      }
     };
 
     set({

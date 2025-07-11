@@ -1,3 +1,4 @@
+import { nodeRegistry } from "~/utils/nodes/node-registry";
 import { type WrappedNodeProps, Node } from "./wrap-node";
 import { generateId } from "@inklate/common/generate-id";
 import { HandleType } from "~/enums/handle-type.enum";
@@ -9,34 +10,6 @@ interface DisplayNodeData extends BaseNodeData {
   text: string;
   wordCount?: number;
   characterCount?: number;
-}
-
-export function createDisplayNodeData(): DisplayNodeData {
-  return {
-    version: 1,
-    color: "#ffffff",
-    name: "Display Node",
-    description: "A node that displays text received from other nodes.",
-    type: "display",
-    handles: {
-      input: {
-        text: {
-          id: `output-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "Response input to display",
-          format: HandleType.Text,
-          label: "Text",
-          order: 1,
-          required: false
-        }
-      },
-      output: {}
-    },
-    loading: false,
-    error: null,
-    lastUpdated: Date.now(),
-    metadata: {},
-    text: ""
-  };
 }
 
 export const DisplayNode = ({
@@ -128,4 +101,3 @@ DisplayNode.displayName = "DisplayNode";
 
 // Export both the old TextNode name for backward compatibility and new DisplayNode name
 export const TextNode = DisplayNode;
-export { createDisplayNodeData as createTextNodeData };

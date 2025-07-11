@@ -3,21 +3,19 @@ import {
   BackgroundVariant,
   ConnectionLineType,
   FitViewOptions,
-  Panel,
   ReactFlow,
   useReactFlow
 } from "@xyflow/react";
 import { CanvasState, useCanvasStore } from "~/store/canvas-store";
-import { wrapNode } from "~/components/nodes/wrap-node";
+import { nodeRegistry } from "~/utils/nodes/node-registry";
 import { canvasConfig } from "~/utils/canvas-config";
 import React, { useEffect, useRef } from "react";
-import { TextNode } from "../nodes/text-node";
-import { LLMNode } from "../nodes/llm-node";
 import { shallow } from "zustand/shallow";
 import { color } from "~/utils/colors";
 import { useTheme } from "next-themes";
 import "@xyflow/react/dist/style.css";
 import { Sidebar } from "./sidebar";
+import "~/utils/plugins";
 
 const selectGraphState = (state: CanvasState) => ({
   nodes: state.nodes,
@@ -60,13 +58,7 @@ export function Canvas() {
     flow?.fitView(fitViewOptions);
   }, [flow]);
 
-  const nodeTypes = React.useMemo(
-    () => ({
-      llm: wrapNode(LLMNode),
-      text: wrapNode(TextNode)
-    }),
-    []
-  );
+  const nodeTypes = React.useMemo(() => nodeRegistry.getReactFlowNodeTypes(), []);
 
   return (
     <div ref={reactFlowWrapperRef} className="h-full w-full overflow-hidden">

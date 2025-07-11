@@ -2,8 +2,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@inklate/ui/select";
 import React, { useCallback, useState, useEffect } from "react";
 import { type WrappedNodeProps, Node } from "./wrap-node";
-import { generateId } from "@inklate/common/generate-id";
-import { HandleType } from "~/enums/handle-type.enum";
 import { useCanvasStore } from "~/store/canvas-store";
 import { useTRPCClient } from "@inklate/common/trpc";
 import { useQuery } from "@tanstack/react-query";
@@ -23,44 +21,6 @@ interface LLMNodeData extends BaseNodeData {
     inputTokens?: number;
     outputTokens?: number;
     totalTokens?: number;
-  };
-}
-
-export function createLLMNodeData(): LLMNodeData {
-  return {
-    version: 1,
-    color: "#ffffff",
-    name: "LLM Node",
-    description: "Run a prompt through an LLM.",
-    type: "llm",
-    handles: {
-      input: {
-        prompt: {
-          id: `input-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "Prompt input",
-          format: HandleType.Text,
-          label: "Prompt",
-          order: 0,
-          required: true
-        }
-      },
-      output: {
-        response: {
-          id: `output-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "LLM response",
-          format: HandleType.Text,
-          label: "Text",
-          order: 0,
-          required: false
-        }
-      }
-    },
-    loading: false,
-    error: null,
-    lastUpdated: Date.now(),
-    metadata: {},
-    text: "",
-    model: "gpt-4o"
   };
 }
 
