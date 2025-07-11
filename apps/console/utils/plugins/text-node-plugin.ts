@@ -1,4 +1,5 @@
-import { addNodeType } from "~/utils/nodes/add-node-type";
+import { createNodeHandleConfig } from "~/utils/handles/handle-converter";
+import { addNodeType } from "~/utils/nodes/node-registry";
 import { generateId } from "@inklate/common/generate-id";
 import { TextNode } from "~/components/nodes/text-node";
 import { HandleType } from "~/enums/handle-type.enum";
@@ -13,19 +14,23 @@ addNodeType({
     version: 1,
     color: "#ffffff",
     type: "display",
-    handles: {
-      input: {
+    handles: createNodeHandleConfig(
+      {
+        // Input handles
         text: {
           id: `input-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "Response input to display",
-          format: HandleType.Text,
+          type: HandleType.Text,
+          description: "Text input to display",
           label: "Text",
           order: 1,
-          required: false
+          required: false,
+          tooltip: "Connect text output from other nodes to display here"
         }
       },
-      output: {}
-    },
+      {
+        // Output handles - none for display node
+      }
+    ),
     loading: false,
     error: null,
     metadata: {},

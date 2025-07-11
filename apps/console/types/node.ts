@@ -1,17 +1,5 @@
-import { HandleType } from "~/enums/handle-type.enum";
-
-type HandleFormat = string;
+import { NodeHandleConfig } from "./handle";
 export type HandleSide = "source" | "target";
-
-export interface Handle {
-  description: string;
-  format: HandleFormat;
-  label?: string;
-  id: string;
-  order: number;
-  required: boolean;
-  type?: HandleType;
-}
 
 export interface BaseNodeData {
   version?: number;
@@ -21,7 +9,8 @@ export interface BaseNodeData {
   description: string;
   type: string;
 
-  handles: { input: Record<string, Handle>; output: Record<string, Handle> };
+  // New extensible handle system
+  handles: NodeHandleConfig;
   input?: Record<string, any> | any[];
   output?: Record<string, any> | any[];
   result?: unknown;

@@ -375,27 +375,72 @@ function NodeWrapper<T extends BaseNodeData = BaseNodeData>({
 
         {enhancedData.handles && (
           <>
-            {typeof enhancedData.handles.input === "object" &&
-              !Array.isArray(enhancedData.handles.input) &&
-              Object.entries(enhancedData.handles.input).map(([handleId, handle]) => (
+            {/* Enhanced handle system with proper positioning and styling */}
+            {enhancedData.handles.input?.handles &&
+              Object.entries(enhancedData.handles.input.handles).map(([handleId, handle]) => (
                 <Handle
                   key={`input-${handleId}`}
                   type="target"
                   position={Position.Left}
                   id={handleId}
-                  style={{ top: `${handle.order * 20 + 10}px` }}
+                  style={{
+                    top: `${handle.order * 30 + 20}px`,
+                    backgroundColor: handle.style?.backgroundColor || "#dbeafe",
+                    borderColor: handle.style?.borderColor || "#3b82f6",
+                    width:
+                      handle.style?.size === "large"
+                        ? "16px"
+                        : handle.style?.size === "small"
+                          ? "8px"
+                          : "12px",
+                    height:
+                      handle.style?.size === "large"
+                        ? "16px"
+                        : handle.style?.size === "small"
+                          ? "8px"
+                          : "12px",
+                    borderRadius:
+                      handle.style?.shape === "square"
+                        ? "2px"
+                        : handle.style?.shape === "diamond"
+                          ? "2px"
+                          : "50%",
+                    transform: handle.style?.shape === "diamond" ? "rotate(45deg)" : undefined
+                  }}
                 />
               ))}
 
-            {typeof enhancedData.handles.output === "object" &&
-              !Array.isArray(enhancedData.handles.output) &&
-              Object.entries(enhancedData.handles.output).map(([handleId, handle]) => (
+            {enhancedData.handles.output?.handles &&
+              Object.entries(enhancedData.handles.output.handles).map(([handleId, handle]) => (
                 <Handle
                   key={`output-${handleId}`}
                   type="source"
                   position={Position.Right}
                   id={handleId}
-                  style={{ top: `${handle.order * 20 + 10}px` }}
+                  style={{
+                    top: `${handle.order * 30 + 20}px`,
+                    backgroundColor: handle.style?.backgroundColor || "#d1fae5",
+                    borderColor: handle.style?.borderColor || "#10b981",
+                    width:
+                      handle.style?.size === "large"
+                        ? "16px"
+                        : handle.style?.size === "small"
+                          ? "8px"
+                          : "12px",
+                    height:
+                      handle.style?.size === "large"
+                        ? "16px"
+                        : handle.style?.size === "small"
+                          ? "8px"
+                          : "12px",
+                    borderRadius:
+                      handle.style?.shape === "square"
+                        ? "2px"
+                        : handle.style?.shape === "diamond"
+                          ? "2px"
+                          : "50%",
+                    transform: handle.style?.shape === "diamond" ? "rotate(45deg)" : undefined
+                  }}
                 />
               ))}
           </>

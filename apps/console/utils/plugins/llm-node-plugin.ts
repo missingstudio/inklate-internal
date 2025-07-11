@@ -1,4 +1,5 @@
-import { addNodeType } from "~/utils/nodes/add-node-type";
+import { createNodeHandleConfig } from "~/utils/handles/handle-converter";
+import { addNodeType } from "~/utils/nodes/node-registry";
 import { generateId } from "@inklate/common/generate-id";
 import { LLMNode } from "~/components/nodes/llm-node";
 import { HandleType } from "~/enums/handle-type.enum";
@@ -10,31 +11,45 @@ addNodeType({
   category: "ai",
   component: LLMNode,
   defaultData: {
-    version: 1,
+    version: 2, // Updated version to indicate new handle system
     color: "#ffffff",
     type: "llm",
-    handles: {
-      input: {
+    handles: createNodeHandleConfig(
+      {
+        // Input handles
         prompt: {
           id: `input-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "Prompt input",
-          format: HandleType.Text,
+          type: HandleType.Text,
+          description: "Prompt input for the LLM",
           label: "Prompt",
           order: 0,
-          required: true
+          required: true,
+          tooltip: "Enter or connect the prompt text for the LLM to process",
+          style: {
+            color: "#3b82f6",
+            backgroundColor: "#dbeafe",
+            borderColor: "#3b82f6"
+          }
         }
       },
-      output: {
+      {
+        // Output handles
         response: {
           id: `output-${generateId({ use: "nanoid", kind: "edge" })}`,
-          description: "LLM response",
-          format: HandleType.Text,
-          label: "Text",
+          type: HandleType.Text,
+          description: "LLM response output",
+          label: "Response",
           order: 0,
-          required: false
+          required: false,
+          tooltip: "The generated response from the LLM",
+          style: {
+            color: "#10b981",
+            backgroundColor: "#d1fae5",
+            borderColor: "#10b981"
+          }
         }
       }
-    },
+    ),
     loading: false,
     error: null,
     metadata: {},

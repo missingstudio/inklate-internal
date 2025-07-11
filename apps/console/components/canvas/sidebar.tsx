@@ -15,7 +15,7 @@ import {
   CommandGroup,
   CommandItem
 } from "@inklate/ui/command";
-import { useNodeRegistry } from "~/utils/nodes/node-registry";
+import { getNodeTypes } from "~/utils/nodes/node-registry";
 import { Panel } from "@xyflow/react";
 import { DragEvent } from "react";
 
@@ -45,7 +45,6 @@ const onDrop = (event: DragEvent<HTMLDivElement>) => {
 };
 
 export const Sidebar = () => {
-  const { getNodeTypes } = useNodeRegistry();
   const nodeTypes = getNodeTypes();
 
   return (

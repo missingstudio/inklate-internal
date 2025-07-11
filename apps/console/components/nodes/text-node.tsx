@@ -1,7 +1,4 @@
-import { nodeRegistry } from "~/utils/nodes/node-registry";
 import { type WrappedNodeProps, Node } from "./wrap-node";
-import { generateId } from "@inklate/common/generate-id";
-import { HandleType } from "~/enums/handle-type.enum";
 import { Button } from "@inklate/ui/button";
 import { BaseNodeData } from "~/types/node";
 import React, { useCallback } from "react";

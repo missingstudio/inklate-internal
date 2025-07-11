@@ -1,10 +1,4 @@
-import {
-  validateDataTransfer,
-  areHandleTypesCompatible,
-  HandleSchema,
-  convertToNodeData,
-  type ValidatedHandle
-} from "~/utils/nodes/node-data-schemas";
+import { isHandleCompatible, transformHandleData } from "~/utils/handles/handle-registry";
 import { Connection, Edge, addEdge } from "@xyflow/react";
 import { ConnectionSlice, CanvasState } from "./types";
 import { HandleType } from "~/enums/handle-type.enum";
@@ -32,13 +26,13 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       return;
     }
 
-    // Get source and target handles
+    // Get source and target handles using new handle system
     const sourceNodeData = sourceNode.data as BaseNodeData;
     const targetNodeData = targetNode.data as BaseNodeData;
 
-    // Extract handle information
-    const sourceHandles = sourceNodeData.handles?.output;
-    const targetHandles = targetNodeData.handles?.input;
+    // Extract handle information from new handle system
+    const sourceHandles = sourceNodeData.handles?.output?.handles;
+    const targetHandles = targetNodeData.handles?.input?.handles;
 
     if (!sourceHandles || !targetHandles) {
       toast.error("Connection failed", {
@@ -47,20 +41,8 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       return;
     }
 
-    // Check if handles are objects (not arrays) and get specific handles
-    if (Array.isArray(sourceHandles) || Array.isArray(targetHandles)) {
-      toast.error("Connection failed", {
-        description: "Array based handles are not supported yet"
-      });
-      return;
-    }
-
-    // Type assertion after array check
-    const sourceHandlesRecord = sourceHandles as Record<string, any>;
-    const targetHandlesRecord = targetHandles as Record<string, any>;
-
-    const sourceHandle = sourceHandlesRecord[connection.sourceHandle!];
-    const targetHandle = targetHandlesRecord[connection.targetHandle!];
+    const sourceHandle = sourceHandles[connection.sourceHandle!];
+    const targetHandle = targetHandles[connection.targetHandle!];
 
     if (!sourceHandle || !targetHandle) {
       toast.error("Connection failed", {
@@ -69,71 +51,42 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       return;
     }
 
-    // Validate handles using zod schema
-    try {
-      const validatedSourceHandle = HandleSchema.parse(sourceHandle) as ValidatedHandle;
-      const validatedTargetHandle = HandleSchema.parse(targetHandle) as ValidatedHandle;
+    console.log(sourceHandle, targetHandle);
 
-      // Check if handle types are compatible
-      if (!areHandleTypesCompatible(validatedSourceHandle.format, validatedTargetHandle.format)) {
-        toast.error(
-          `Connection failed: Cannot connect ${validatedSourceHandle.format} output to ${validatedTargetHandle.format} input`,
-          {
-            description:
-              "These handle types are not compatible. Check node documentation for supported connections."
-          }
-        );
-        return;
-      }
-
-      // Validate data transfer if there's existing data
-      const sourceData = sourceNodeData?.[connection.sourceHandle!];
-      if (sourceData) {
-        const validationResult = validateDataTransfer(
-          sourceData,
-          validatedSourceHandle,
-          validatedTargetHandle
-        );
-
-        console.log("validationResult", validationResult);
-
-        if (!validationResult.isValid) {
-          toast.error("Data transfer validation failed", {
-            description: validationResult.error || "Unable to transfer data between these handles"
-          });
-          return;
+    // Validate handle compatibility using the new handle registry
+    if (!isHandleCompatible(sourceHandle.type, targetHandle.type)) {
+      toast.error(
+        `Connection failed: Cannot connect ${sourceHandle.type} output to ${targetHandle.type} input`,
+        {
+          description:
+            "These handle types are not compatible. Check node documentation for supported connections."
         }
-      }
-
-      // If validation passes, create the edge
-      const newEdge: Edge = {
-        id: generateEdgeId(connection.source, connection.target),
-        source: connection.source,
-        target: connection.target,
-        sourceHandle: connection.sourceHandle,
-        targetHandle: connection.targetHandle,
-        data: {
-          sourceHandleType: validatedSourceHandle.format,
-          targetHandleType: validatedTargetHandle.format,
-          validated: true
-        }
-      };
-
-      set(
-        produce((state) => {
-          state.edges = addEdge(newEdge, state.edges);
-        })
       );
-
-      // Transfer data from source to target node
-      get().transferData(connection.source, connection.target);
-    } catch (error) {
-      toast.error("Connection validation failed", {
-        description:
-          error instanceof Error ? error.message : "Unable to validate connection between nodes"
-      });
       return;
     }
+
+    // Create the edge
+    const newEdge: Edge = {
+      id: generateEdgeId(connection.source, connection.target),
+      source: connection.source,
+      target: connection.target,
+      sourceHandle: connection.sourceHandle,
+      targetHandle: connection.targetHandle,
+      data: {
+        sourceHandleType: sourceHandle.type,
+        targetHandleType: targetHandle.type,
+        validated: true
+      }
+    };
+
+    set(
+      produce((state) => {
+        state.edges = addEdge(newEdge, state.edges);
+      })
+    );
+
+    // Transfer data from source to target node
+    get().transferData(connection.source, connection.target);
   },
 
   transferData: (sourceNodeId: string, targetNodeId: string) => {
@@ -154,9 +107,20 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
     const sourceData = sourceNode.data as any;
 
     try {
-      const convertedData = convertToNodeData(sourceData.response, HandleType.Text);
+      // Use the new handle registry for data transformation
+      const sourceHandleType =
+        (connectingEdge.data?.sourceHandleType as HandleType) || HandleType.Text;
+      const targetHandleType =
+        (connectingEdge.data?.targetHandleType as HandleType) || HandleType.Text;
+
+      const transformedData = transformHandleData(
+        sourceData.response || sourceData.text,
+        sourceHandleType,
+        targetHandleType
+      );
+
       get().setNodeData(targetNodeId, {
-        text: convertedData.value,
+        text: transformedData,
         lastUpdated: Date.now()
       });
     } catch (error) {
