@@ -3,7 +3,9 @@ import { HonoContext } from "./ctx";
 import { Hono } from "hono";
 
 import { appRouter, createTRPCContext } from "./trpc";
+import { modelsRouter } from "./routers/models";
 import { trpcServer } from "@hono/trpc-server";
+import { chatsRouter } from "./routers/chats";
 import { authRouter } from "./routers/auth";
 import { webSocketHandler } from "./ws";
 import { getAuth } from "~/lib/auth";
@@ -26,6 +28,8 @@ export default class extends WorkerEntrypoint<typeof env> {
     })
     .get("/ws", webSocketHandler)
     .route("/auth", authRouter)
+    .route("/v1/chats", chatsRouter)
+    .route("/v1/models", modelsRouter)
     .use(
       trpcServer({
         endpoint: "/api/trpc",

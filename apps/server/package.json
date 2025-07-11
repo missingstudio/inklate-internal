@@ -18,10 +18,12 @@
     "./auth": "./src/lib/auth.ts"
   },
   "dependencies": {
-    "@inklate/email": "workspace:*",
+    "@ai-sdk/openai": "^1.3.23",
     "@hono/trpc-server": "^0.4.0",
+    "@inklate/email": "workspace:*",
     "@react-email/render": "^1.1.3",
     "@trpc/server": "^11.4.3",
+    "ai": "^4.3.17",
     "better-auth": "^1.2.10",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.8.2",
