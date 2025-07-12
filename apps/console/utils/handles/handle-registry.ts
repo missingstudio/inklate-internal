@@ -68,6 +68,10 @@ export function hasHandleType(handleTypeId: HandleType): boolean {
   return handleRegistry.get(handleTypeId) !== undefined;
 }
 
+export function getAllHandleTypes(): HandleTypeDefinition[] {
+  return handleRegistry.getAll();
+}
+
 export const isHandleCompatible = (sourceType: HandleType, targetType: HandleType): boolean => {
   return handleRegistry.isCompatible(sourceType, targetType);
 };
@@ -82,8 +86,4 @@ export const transformHandleData = (
 
 export const getHandleTypeDefinition = (type: HandleType): HandleTypeDefinition | undefined => {
   return handleRegistry.get(type);
-};
-
-export const getAllHandleTypes = (): HandleTypeDefinition[] => {
-  return handleRegistry.getAll();
 };

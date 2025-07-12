@@ -133,7 +133,7 @@ export function getAllNodeTypes(): NodeTypeDefinition[] {
   return nodeRegistry.getAll();
 }
 
-export function getCategories(): string[] {
+export function getNodeCategories(): string[] {
   return nodeRegistry.getCategories();
 }
 

@@ -1,4 +1,4 @@
-import { ReactFlowSlice, CanvasState } from "./types";
+import { ReactFlowSlice, CanvasState } from "~/types/store";
 import { StateCreator } from "zustand";
 
 export const createReactFlowSlice: StateCreator<CanvasState, [], [], ReactFlowSlice> = (set) => ({

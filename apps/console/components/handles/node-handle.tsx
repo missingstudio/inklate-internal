@@ -1,5 +1,4 @@
 import { getHandleTypeDefinition } from "~/utils/handles/handle-registry";
-import { getHandlePositions } from "~/utils/handles/position-calculator";
 import { HandleConfig, HandleLayoutConfig } from "~/types/handle";
 import React, { useState, useCallback } from "react";
 import { Handle, Position } from "@xyflow/react";
@@ -7,7 +6,6 @@ import { cn } from "@inklate/ui/lib/utils";
 
 interface NodeHandleProps {
   handle: HandleConfig;
-  position: { x: number; y: number };
   isInput: boolean;
   nodeId: string;
   onConnect?: (handleId: string, targetHandleId: string) => void;
@@ -18,7 +16,6 @@ interface NodeHandleProps {
 
 export const NodeHandle: React.FC<NodeHandleProps> = ({
   handle,
-  position,
   isInput,
   nodeId,
   onConnect,
@@ -64,8 +61,6 @@ export const NodeHandle: React.FC<NodeHandleProps> = ({
       borderWidth: 2,
       borderStyle: "solid",
       position: "absolute" as const,
-      left: position.x - handleSize / 2,
-      top: position.y - handleSize / 2,
       zIndex: 10,
       cursor: "crosshair",
       transition: "all 0.2s ease",
@@ -112,73 +107,6 @@ export const NodeHandle: React.FC<NodeHandleProps> = ({
           isHovered && "hovered"
         )}
       />
-
-      {/* Handle Icon */}
-      {handleTypeDefinition?.defaultIcon && (
-        <div
-          style={{
-            position: "absolute",
-            left: position.x - 6,
-            top: position.y - 6,
-            width: 12,
-            height: 12,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "8px",
-            pointerEvents: "none",
-            zIndex: 11,
-            color: style.color || "#666"
-          }}
-        >
-          {handleTypeDefinition.defaultIcon}
-        </div>
-      )}
-
-      {/* Handle Label */}
-      {handle.label && (
-        <div
-          style={{
-            position: "absolute",
-            left: isInput ? position.x - 60 : position.x + 20,
-            top: position.y - 8,
-            fontSize: "10px",
-            color: "#666",
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
-            padding: "2px 6px",
-            borderRadius: "4px",
-            whiteSpace: "nowrap",
-            pointerEvents: "none",
-            zIndex: 9,
-            opacity: isHovered ? 1 : 0.7,
-            transition: "opacity 0.2s ease"
-          }}
-        >
-          {handle.label}
-        </div>
-      )}
-
-      {/* Tooltip */}
-      {isHovered && handle.tooltip && (
-        <div
-          style={{
-            position: "absolute",
-            left: isInput ? position.x - 120 : position.x + 20,
-            top: position.y + 15,
-            backgroundColor: "#333",
-            color: "white",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            fontSize: "10px",
-            whiteSpace: "nowrap",
-            pointerEvents: "none",
-            zIndex: 20,
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)"
-          }}
-        >
-          {handle.tooltip}
-        </div>
-      )}
     </>
   );
 };
@@ -204,19 +132,13 @@ export const HandleGroup: React.FC<HandleGroupProps> = ({
   onHover,
   onLeave
 }) => {
-  const positions = getHandlePositions(handles, isInput, layout);
-
   return (
     <>
       {handles.map((handle, index) => {
-        const position = positions.find(
-          (p: { handleId: string; position: { x: number; y: number } }) => p.handleId === handle.id
-        )?.position || { x: 0, y: 0 };
         return (
           <NodeHandle
             key={handle.id}
             handle={handle}
-            position={position}
             isInput={isInput}
             nodeId={nodeId}
             onConnect={onConnect}

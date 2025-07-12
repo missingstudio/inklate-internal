@@ -5,7 +5,7 @@ import { createDragDropSlice } from "./drag-drop-slice";
 import { createUtilitySlice } from "./utility-slice";
 import { createNodeSlice } from "./node-slice";
 import { createEdgeSlice } from "./edge-slice";
-import { CanvasState } from "./types";
+import { CanvasState } from "~/types/store";
 
 export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get, api) => ({
   ...createReactFlowSlice(set, get, api),
@@ -15,13 +15,3 @@ export const useCanvasStore = createWithEqualityFn<CanvasState>((set, get, api) 
   ...createDragDropSlice(set, get, api),
   ...createUtilitySlice(set, get, api)
 }));
-
-export type { CanvasState, NodeId, EdgeId } from "./types";
-export type {
-  ReactFlowSlice,
-  NodeSlice,
-  EdgeSlice,
-  ConnectionSlice,
-  DragDropSlice,
-  UtilitySlice
-} from "./types";

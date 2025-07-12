@@ -1,22 +1,19 @@
 "use client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@inklate/ui/select";
 import { NodeContainer } from "~/components/nodes/base/node-container";
-import { NodeErrorBoundary } from "~/providers/node-error-boundary";
 import { NodeContent } from "~/components/nodes/base/node-content";
 import { NodeHeader } from "~/components/nodes/base/node-header";
 import { NodeFooter } from "~/components/nodes/base/node-footer";
+import { WrappedNodeProps } from "~/components/nodes/wrap-node";
 import { useLLMExecution } from "~/hooks/use-llm-execution";
-import { NodeProvider } from "~/providers/node-provider";
 import { useTRPCClient } from "@inklate/common/trpc";
 import React, { useCallback, useState } from "react";
-import { useNodeData } from "~/hooks/use-node-data";
 import { useQuery } from "@tanstack/react-query";
 import { Textarea } from "@inklate/ui/textarea";
-import { type NodeProps } from "@xyflow/react";
 import { Button } from "@inklate/ui/button";
 import { BaseNodeData } from "~/types/node";
 
-export interface LLMFormProps {
+interface LLMFormProps {
   prompt: string;
   onPromptChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
   model: string;
@@ -28,7 +25,7 @@ export interface LLMFormProps {
   disabled?: boolean;
 }
 
-export const LLMForm = ({
+const LLMForm = ({
   prompt,
   onPromptChange,
   model,
@@ -40,31 +37,21 @@ export const LLMForm = ({
   disabled
 }: LLMFormProps) => {
   return (
-    <div className="space-y-4">
-      <div>
-        <label className="mb-2 block text-xs font-semibold text-gray-700">PROMPT</label>
+    <div>
+      <label className="mb-2 block text-xs font-semibold text-gray-700">PROMPT</label>
+      <div className="relative">
         <Textarea
-          className="field-sizing-content max-h-60 min-h-20 resize-none"
+          className="field-sizing-content max-h-60 min-h-32 resize-none pb-10" // Add padding to make room
           rows={4}
           placeholder="Enter your prompt for the LLM..."
           value={prompt}
           onChange={onPromptChange}
           disabled={disabled}
         />
-      </div>
 
-      {response && (
-        <div>
-          <label className="mb-2 block text-xs font-semibold text-gray-700">RESPONSE</label>
-          <div className="rounded-md border border-gray-200 bg-gray-50 p-3 text-sm">{response}</div>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <label className="text-xs font-semibold text-gray-700">MODEL</label>
+        <div className="absolute right-0 bottom-0 left-0 flex items-center justify-between space-x-2 rounded px-2 py-2 shadow">
           <Select value={model} onValueChange={onModelChange}>
-            <SelectTrigger className="h-7 w-32">
+            <SelectTrigger className="h-7 w-28 text-xs">
               <SelectValue placeholder="Select model" />
             </SelectTrigger>
             <SelectContent>
@@ -79,16 +66,16 @@ export const LLMForm = ({
               ))}
             </SelectContent>
           </Select>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={onExecute}
+            disabled={isLoading || !prompt?.trim()}
+            className="h-6 px-2 text-xs"
+          >
+            {isLoading ? "Running..." : "Run LLM"}
+          </Button>
         </div>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={onExecute}
-          disabled={isLoading || !prompt?.trim()}
-          className="h-6 px-2 text-xs"
-        >
-          {isLoading ? "Running..." : "Run LLM"}
-        </Button>
       </div>
     </div>
   );
@@ -105,8 +92,13 @@ interface LLMNodeData extends BaseNodeData {
   };
 }
 
-const LLMNodeComponent = ({ id, selected, dragging }: NodeProps) => {
-  const { data, updateData, deleteNode, clearError } = useNodeData<LLMNodeData>(id);
+export const LLMNode = ({
+  id,
+  data,
+  selected,
+  dragging,
+  updateData
+}: WrappedNodeProps<LLMNodeData>) => {
   const [model, setModel] = useState(data.model || "gpt-4o");
 
   // API data
@@ -139,60 +131,49 @@ const LLMNodeComponent = ({ id, selected, dragging }: NodeProps) => {
   );
 
   const handleError = data.error || error?.message;
+  const clearError = () => updateData({ error: null });
 
   return (
-    <NodeProvider
-      id={id}
-      data={data}
+    <NodeContainer
+      className={dragging ? "opacity-70" : ""}
       selected={selected}
       dragging={dragging}
-      updateData={updateData}
-      deleteNode={deleteNode}
+      error={handleError}
+      onClearError={clearError}
     >
-      <NodeContainer
-        className={dragging ? "opacity-70" : ""}
-        selected={selected}
-        dragging={dragging}
+      <NodeHeader
+        title="Anthropic"
+        subtitle="Run a prompt through an LLM"
+        loading={data.loading || isLoading}
         error={handleError}
         onClearError={clearError}
-      >
-        <NodeHeader
-          title="Anthropic"
-          subtitle="Run a prompt through an LLM"
-          loading={data.loading || isLoading}
-          error={handleError}
-          onClearError={clearError}
-          icon={
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100">
-              <span className="text-xs font-semibold text-orange-600">AI</span>
-            </div>
-          }
+        icon={
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100">
+            <span className="text-xs font-semibold text-orange-600">AI</span>
+          </div>
+        }
+      />
+
+      <NodeContent>
+        <LLMForm
+          prompt={data.text || ""}
+          onPromptChange={onPromptChange}
+          model={model}
+          onModelChange={onModelChange}
+          models={modelsData?.models}
+          response={latestResponse}
+          onExecute={executeLLM}
+          isLoading={isLoading || data.loading}
+          disabled={isLoading || data.loading}
         />
+      </NodeContent>
 
-        <NodeContent>
-          <LLMForm
-            prompt={data.text || ""}
-            onPromptChange={onPromptChange}
-            model={model}
-            onModelChange={onModelChange}
-            models={modelsData?.models}
-            response={latestResponse}
-            onExecute={executeLLM}
-            isLoading={isLoading || data.loading}
-            disabled={isLoading || data.loading}
-          />
-        </NodeContent>
-
-        <NodeFooter updatedAt={data.updatedAt} usage={data.usage} />
-      </NodeContainer>
-    </NodeProvider>
+      <NodeFooter
+        updatedAt={data.lastUpdated ? new Date(data.lastUpdated).toISOString() : undefined}
+        usage={data.usage}
+      />
+    </NodeContainer>
   );
 };
-
-export const LLMNode = (props: NodeProps) => (
-  <NodeErrorBoundary nodeId={props.id}>
-    <LLMNodeComponent {...props} />
-  </NodeErrorBoundary>
-);
 
 LLMNode.displayName = "LLMNode";

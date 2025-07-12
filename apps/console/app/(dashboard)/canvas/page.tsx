@@ -1,7 +1,7 @@
 import type { Route } from "../../(dashboard)/canvas/+types/page";
 import { MetaFunction, redirect } from "react-router";
 import { siteConfig } from "~/utils/site-config";
-import { Home } from "~/components/home/home";
+import { Home } from "~/components/home";
 
 export const meta: MetaFunction = () => {
   return [

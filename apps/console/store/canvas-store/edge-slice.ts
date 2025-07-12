@@ -1,5 +1,5 @@
 import { Edge, applyEdgeChanges, EdgeChange } from "@xyflow/react";
-import { EdgeSlice, CanvasState, EdgeId } from "./types";
+import { EdgeSlice, CanvasState, EdgeId } from "~/types/store";
 import { StateCreator } from "zustand";
 import { produce } from "immer";
 

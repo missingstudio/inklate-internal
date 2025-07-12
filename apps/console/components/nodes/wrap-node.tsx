@@ -1,8 +1,9 @@
+import { HandleGroup, useHandleManager } from "~/components/handles/node-handle";
 import { NodeProvider, type NodeId } from "~/providers/node-provider";
 import { NodeErrorBoundary } from "~/providers/node-error-boundary";
-import { type NodeProps, Handle, Position } from "@xyflow/react";
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback, useMemo, useRef } from "react";
 import { useCanvasStore } from "~/store/canvas-store";
+import { type NodeProps } from "@xyflow/react";
 import { BaseNodeData } from "~/types/node";
 import { cn } from "@inklate/ui/lib/utils";
 
@@ -16,7 +17,7 @@ export interface WrappedNodeProps<T extends BaseNodeData = BaseNodeData> {
   children?: React.ReactNode;
 }
 
-export interface NodeWrapperConfig {
+interface NodeWrapperConfig {
   enableErrorBoundary?: boolean;
   enableLoadingState?: boolean;
   enableSelection?: boolean;
@@ -29,69 +30,55 @@ export interface NodeWrapperConfig {
 
 interface NodeHandlesProps {
   data: BaseNodeData;
+  nodeId: string;
 }
 
-const NodeHandles = ({ data }: NodeHandlesProps) => {
+const NodeHandles = ({ data, nodeId }: NodeHandlesProps) => {
   if (!data.handles) return null;
+
+  const { handleConnect, handleDisconnect, handleHover, handleLeave } = useHandleManager(nodeId);
 
   const inputHandles = data.handles.input?.handles || {};
   const outputHandles = data.handles.output?.handles || {};
 
-  const getHandleStyle = (handle: any) => {
-    const baseSize = handle.style?.size === "large" ? 16 : handle.style?.size === "small" ? 8 : 12;
-    const isSquare = handle.style?.shape === "square";
-    const isDiamond = handle.style?.shape === "diamond";
+  // Convert handle objects to arrays for HandleGroup
+  const inputHandleArray = Object.entries(inputHandles).map(([handleId, handle]) => ({
+    ...handle,
+    id: handleId
+  }));
 
-    return {
-      backgroundColor:
-        handle.style?.backgroundColor || (handle.type === "input" ? "#dbeafe" : "#d1fae5"),
-      borderColor: handle.style?.borderColor || (handle.type === "input" ? "#3b82f6" : "#10b981"),
-      width: `${baseSize}px`,
-      height: `${baseSize}px`,
-      borderRadius: isSquare ? "2px" : isDiamond ? "2px" : "50%",
-      transform: isDiamond ? "rotate(45deg)" : undefined,
-      border: "2px solid",
-      zIndex: 10
-    };
-  };
-
-  const getHandlePosition = (handle: any, index: number) => {
-    const baseOffset = 20;
-    const spacing = 30;
-    return `${baseOffset + (handle.order || index) * spacing}px`;
-  };
+  const outputHandleArray = Object.entries(outputHandles).map(([handleId, handle]) => ({
+    ...handle,
+    id: handleId
+  }));
 
   return (
     <>
-      {/* Input Handles */}
-      {Object.entries(inputHandles).map(([handleId, handle], index) => (
-        <Handle
-          key={`input-${handleId}`}
-          type="target"
-          position={Position.Left}
-          id={handleId}
-          style={{
-            top: getHandlePosition(handle, index),
-            ...getHandleStyle({ ...handle, type: "input" })
-          }}
-          className="transition-all duration-200 hover:scale-110"
+      {inputHandleArray.length > 0 && (
+        <HandleGroup
+          handles={inputHandleArray}
+          isInput={true}
+          nodeId={nodeId}
+          layout={data.handles.input?.layout}
+          onConnect={handleConnect}
+          onDisconnect={handleDisconnect}
+          onHover={handleHover}
+          onLeave={handleLeave}
         />
-      ))}
+      )}
 
-      {/* Output Handles */}
-      {Object.entries(outputHandles).map(([handleId, handle], index) => (
-        <Handle
-          key={`output-${handleId}`}
-          type="source"
-          position={Position.Right}
-          id={handleId}
-          style={{
-            top: getHandlePosition(handle, index),
-            ...getHandleStyle({ ...handle, type: "output" })
-          }}
-          className="transition-all duration-200 hover:scale-110"
+      {outputHandleArray.length > 0 && (
+        <HandleGroup
+          handles={outputHandleArray}
+          isInput={false}
+          nodeId={nodeId}
+          layout={data.handles.output?.layout}
+          onConnect={handleConnect}
+          onDisconnect={handleDisconnect}
+          onHover={handleHover}
+          onLeave={handleLeave}
         />
-      ))}
+      )}
     </>
   );
 };
@@ -117,6 +104,7 @@ function NodeWrapper<T extends BaseNodeData = BaseNodeData>({
     minHeight = 60
   } = config;
 
+  const nodeRef = useRef<HTMLDivElement>(null);
   const nodeData = useCanvasStore((state) => state.getNodeData<T>(id));
   const setNodeData = useCanvasStore((state) => state.setNodeData);
   const removeNode = useCanvasStore((state) => state.removeNode);
@@ -154,7 +142,11 @@ function NodeWrapper<T extends BaseNodeData = BaseNodeData>({
       updateData={updateData}
       deleteNode={deleteNode}
     >
-      <div className={cn("relative", className)} style={{ minWidth, minHeight, ...style }}>
+      <div
+        ref={nodeRef}
+        className={cn("relative", className)}
+        style={{ minWidth, minHeight, ...style }}
+      >
         <NodeComponent
           id={id}
           data={enhancedData}
@@ -164,7 +156,7 @@ function NodeWrapper<T extends BaseNodeData = BaseNodeData>({
           deleteNode={deleteNode}
         />
 
-        <NodeHandles data={enhancedData} />
+        <NodeHandles data={enhancedData} nodeId={id} />
       </div>
     </NodeProvider>
   );

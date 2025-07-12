@@ -1,5 +1,5 @@
-import { UtilitySlice, CanvasState } from "./types";
-import { generateNodeId } from "./utils";
+import { UtilitySlice, CanvasState } from "~/types/store";
+import { generateNodeId } from "~/utils/store";
 import { StateCreator } from "zustand";
 
 export const createUtilitySlice: StateCreator<CanvasState, [], [], UtilitySlice> = () => ({

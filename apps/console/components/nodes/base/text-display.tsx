@@ -3,16 +3,12 @@ import React from "react";
 
 export interface TextDisplayProps {
   text: string;
-  wordCount?: number;
-  characterCount?: number;
   onClear?: () => void;
   placeholder?: string;
 }
 
 export const TextDisplay = ({
   text,
-  wordCount,
-  characterCount,
   onClear,
   placeholder = "No text received. Connect a text output from another node."
 }: TextDisplayProps) => {
@@ -29,11 +25,7 @@ export const TextDisplay = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <div className="flex items-center space-x-3">
-          {wordCount !== undefined && <span>Words: {wordCount}</span>}
-          {characterCount !== undefined && <span>Chars: {characterCount}</span>}
-        </div>
+      <div className="flex items-center justify-end text-xs text-gray-500">
         {text && onClear && (
           <Button
             size="sm"

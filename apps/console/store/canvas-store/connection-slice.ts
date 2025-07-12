@@ -1,9 +1,10 @@
 import { isHandleCompatible, transformHandleData } from "~/utils/handles/handle-registry";
+import { ConnectionSlice, CanvasState } from "~/types/store";
 import { Connection, Edge, addEdge } from "@xyflow/react";
-import { ConnectionSlice, CanvasState } from "./types";
+import { createEdge, edgeRegistry } from "~/utils/edges";
 import { HandleType } from "~/enums/handle-type.enum";
+import { generateEdgeId } from "~/utils/store";
 import { BaseNodeData } from "~/types/node";
-import { generateEdgeId } from "./utils";
 import { StateCreator } from "zustand";
 import { produce } from "immer";
 import { toast } from "sonner";
@@ -62,9 +63,11 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       );
       return;
     }
+    const edgeType = edgeRegistry.get("dashed");
 
     // Create the edge
     const newEdge: Edge = {
+      type: edgeType?.id,
       id: generateEdgeId(connection.source, connection.target),
       source: connection.source,
       target: connection.target,
@@ -73,7 +76,11 @@ export const createConnectionSlice: StateCreator<CanvasState, [], [], Connection
       data: {
         sourceHandleType: sourceHandle.type,
         targetHandleType: targetHandle.type,
-        validated: true
+        validated: true,
+        gradient: true,
+        strokeWidth: 2,
+        animated: false,
+        dashed: false
       }
     };
 

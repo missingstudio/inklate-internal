@@ -1,5 +1,5 @@
 import { nodeRegistry } from "~/utils/nodes/node-registry";
-import { DragDropSlice, CanvasState } from "./types";
+import { DragDropSlice, CanvasState } from "~/types/store";
 import { StateCreator } from "zustand";
 import { Node } from "@xyflow/react";
 import { DragEvent } from "react";

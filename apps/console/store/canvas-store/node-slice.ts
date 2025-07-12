@@ -1,12 +1,11 @@
 import { Node, applyNodeChanges, NodeChange } from "@xyflow/react";
-import { NodeSlice, CanvasState, NodeId } from "./types";
+import { NodeSlice, CanvasState, NodeId } from "~/types/store";
 import { BaseNodeData } from "~/types/node";
 import { StateCreator } from "zustand";
 import { produce } from "immer";
 
 export const createNodeSlice: StateCreator<CanvasState, [], [], NodeSlice> = (set, get) => ({
   nodes: [],
-
   getNode: (nodeId: NodeId) => get().nodes.find((n: Node) => n.id === nodeId),
 
   addNode: (node: Node) =>

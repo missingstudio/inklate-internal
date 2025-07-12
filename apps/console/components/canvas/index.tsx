@@ -6,16 +6,23 @@ import {
   ReactFlow,
   useReactFlow
 } from "@xyflow/react";
-import { CanvasState, useCanvasStore } from "~/store/canvas-store";
+import { edgeRegistry, registerEdgeTypes } from "~/utils/edges";
 import { nodeRegistry } from "~/utils/nodes/node-registry";
+import { useCanvasStore } from "~/store/canvas-store";
+import { registerHandleTypes } from "~/utils/handles";
 import { canvasConfig } from "~/utils/canvas-config";
+import { registerNodeTypes } from "~/utils/nodes";
 import React, { useEffect, useRef } from "react";
+import { CanvasState } from "~/types/store";
 import { shallow } from "zustand/shallow";
 import { color } from "~/utils/colors";
 import { useTheme } from "next-themes";
 import "@xyflow/react/dist/style.css";
 import { Sidebar } from "./sidebar";
-import "~/utils/plugins";
+
+registerEdgeTypes();
+registerHandleTypes();
+registerNodeTypes();
 
 const selectGraphState = (state: CanvasState) => ({
   nodes: state.nodes,
@@ -59,6 +66,7 @@ export function Canvas() {
   }, [flow]);
 
   const nodeTypes = React.useMemo(() => nodeRegistry.getReactFlowNodeTypes(), []);
+  const edgeTypes = React.useMemo(() => edgeRegistry.getReactFlowEdgeTypes(), []);
 
   return (
     <div ref={reactFlowWrapperRef} className="h-full w-full overflow-hidden">
@@ -69,6 +77,7 @@ export function Canvas() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitViewOptions={{ padding: 0.2, maxZoom: 1 }}
         snapGrid={[10, 10]}
         connectionRadius={70}

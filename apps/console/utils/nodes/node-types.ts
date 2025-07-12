@@ -1,10 +1,46 @@
 import { createNodeHandleConfig } from "~/utils/handles/handle-converter";
-import { addNodeType } from "~/utils/nodes/node-registry";
 import { generateId } from "@inklate/common/generate-id";
-import { LLMNode } from "~/components/nodes/llm-node";
+import { TextNode, LLMNode } from "~/components/nodes";
 import { HandleType } from "~/enums/handle-type.enum";
+import { NodeTypeDefinition } from "./node-registry";
+import { nodeRegistry } from "./node-registry";
 
-addNodeType({
+export const textNodeType: NodeTypeDefinition = {
+  id: "text",
+  name: "Display Node",
+  description: "A node that displays text received from other nodes.",
+  category: "basic",
+  component: TextNode,
+  defaultData: {
+    version: 1,
+    color: "#ffffff",
+    type: "display",
+    handles: createNodeHandleConfig(
+      {
+        // Input handles
+        text: {
+          id: `input-${generateId({ use: "nanoid", kind: "edge" })}`,
+          type: HandleType.Text,
+          description: "Text input to display",
+          label: "Text",
+          order: 1,
+          required: false,
+          tooltip: "Connect text output from other nodes to display here"
+        }
+      },
+      {
+        // Output handles - none for display node
+      }
+    ),
+    loading: false,
+    error: null,
+    metadata: {},
+    text: ""
+  },
+  color: "#6366f1"
+};
+
+export const llmNodeType: NodeTypeDefinition = {
   id: "llm",
   name: "LLM Node",
   description: "Run a prompt through an LLM.",
@@ -57,4 +93,9 @@ addNodeType({
     model: "gpt-4o"
   },
   color: "#10b981"
-});
+};
+
+export function registerNodeTypes(): void {
+  nodeRegistry.register(textNodeType);
+  nodeRegistry.register(llmNodeType);
+}
