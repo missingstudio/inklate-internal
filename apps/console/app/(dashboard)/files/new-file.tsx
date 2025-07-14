@@ -1,7 +1,7 @@
-import { Route } from "../../../(dashboard)/canvas/[canvasId]/+types/page";
+import { Route } from "../../(dashboard)/files/+types/new-file";
 import { MetaFunction, redirect } from "react-router";
+import { getServerTrpc } from "~/lib/trpc/server";
 import { siteConfig } from "~/utils/site-config";
-import { Canvas } from "~/components/canvas";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,6 +13,15 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader({ request }: Route.LoaderArgs) {
+  const trpc = getServerTrpc(request);
+  const file = await trpc.files.create.mutate({
+    name: "Untitled file",
+    data: { nodes: [], edges: [] }
+  });
+  return redirect(`/files/${file.id}`);
+}
+
 export default function HomePage({ loaderData }: Route.ComponentProps) {
-  return <Canvas />;
+  return <></>;
 }

@@ -24,7 +24,7 @@ export function NavMain() {
       pathname.startsWith(config.path)
     );
 
-    const currentSection = section?.[0] || "canvas";
+    const currentSection = section?.[0] || "files";
     if (navigationConfig[currentSection]) {
       const items = [...navigationConfig[currentSection].sections];
       return { currentSection, navItems: items };
@@ -36,7 +36,7 @@ export function NavMain() {
     }
   }, [pathname]);
 
-  const showCreateButton = currentSection === "canvas";
+  const showCreateButton = currentSection === "files";
   return (
     <>
       {showCreateButton && (
@@ -45,12 +45,12 @@ export function NavMain() {
             <SidebarMenu>
               <SidebarMenuItem className="flex items-center gap-2">
                 <SidebarMenuButton
-                  tooltip="Create new canvas"
+                  tooltip="Create new file"
                   className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 cursor-pointer duration-200 ease-linear"
-                  onClick={() => navigate("/canvas/new")}
+                  onClick={() => navigate("/files/new")}
                 >
                   <IconCirclePlusFilled />
-                  <span>Create new canvas</span>
+                  <span>Create new file</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

@@ -15,6 +15,7 @@ export interface ReactFlowSlice {
 export interface NodeSlice {
   nodes: Node[];
   addNode: (node: Node) => void;
+  setNodes: (nodes: Node[]) => void;
   removeNode: (nodeId: NodeId) => void;
   updateNode: (nodeId: NodeId, update: Partial<Node>) => void;
   getNode: (nodeId: NodeId) => Node | undefined;
@@ -26,6 +27,7 @@ export interface NodeSlice {
 export interface EdgeSlice {
   edges: Edge[];
   addEdge: (edge: Edge) => void;
+  setEdges: (edges: Edge[]) => void;
   removeEdge: (edgeId: EdgeId) => void;
   updateEdge: (edgeId: EdgeId, update: Partial<Edge>) => void;
   getEdge: (edgeId: EdgeId) => Edge | undefined;
@@ -48,7 +50,7 @@ export interface UtilitySlice {
   getId: (type: string) => string;
 }
 
-export interface CanvasState
+export interface FlowState
   extends ReactFlowSlice,
     NodeSlice,
     EdgeSlice,

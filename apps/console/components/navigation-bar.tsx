@@ -10,7 +10,7 @@ import { SidebarTrigger } from "@inklate/ui/sidebar";
 import React, { useEffect, useState } from "react";
 import { Separator } from "@inklate/ui/separator";
 import { ThemeSwitcher } from "./theme-switcher";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export function AppNavigationBar() {
   const [breadcrumbItems, setBreadcrumbItems] = useState<{ title: string; url: string }[]>([]);
@@ -41,9 +41,9 @@ export function AppNavigationBar() {
             {breadcrumbItems.map((item, index) => (
               <React.Fragment key={item.url}>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={item.url}>
+                  <Link to={item.url}>
                     <BreadcrumbPage>{item.title}</BreadcrumbPage>
-                  </BreadcrumbLink>
+                  </Link>
                 </BreadcrumbItem>
                 {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
               </React.Fragment>
@@ -59,7 +59,7 @@ export function AppNavigationBar() {
 }
 
 const breadcrumbsMap: Record<string, string> = {
-  canvas: "Canvas",
+  files: "Files",
   settings: "Settings",
   profile: "Profile"
 };

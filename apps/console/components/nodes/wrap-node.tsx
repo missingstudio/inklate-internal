@@ -2,7 +2,7 @@ import { HandleGroup, useHandleManager } from "~/components/handles/node-handle"
 import { NodeProvider, type NodeId } from "~/providers/node-provider";
 import { NodeErrorBoundary } from "~/providers/node-error-boundary";
 import React, { memo, useCallback, useMemo, useRef } from "react";
-import { useCanvasStore } from "~/store/canvas-store";
+import { useFlowStore } from "~/store/flow-store";
 import { type NodeProps } from "@xyflow/react";
 import { BaseNodeData } from "~/types/node";
 import { cn } from "@inklate/ui/lib/utils";
@@ -105,9 +105,9 @@ function NodeWrapper<T extends BaseNodeData = BaseNodeData>({
   } = config;
 
   const nodeRef = useRef<HTMLDivElement>(null);
-  const nodeData = useCanvasStore((state) => state.getNodeData<T>(id));
-  const setNodeData = useCanvasStore((state) => state.setNodeData);
-  const removeNode = useCanvasStore((state) => state.removeNode);
+  const nodeData = useFlowStore((state) => state.getNodeData<T>(id));
+  const setNodeData = useFlowStore((state) => state.setNodeData);
+  const removeNode = useFlowStore((state) => state.removeNode);
 
   const updateData = useCallback(
     (updates: Partial<T>) => {

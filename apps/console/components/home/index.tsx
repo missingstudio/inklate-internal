@@ -26,12 +26,12 @@ export function Home() {
 
           <div className="mb-4 space-y-2">
             <h1 className="text-xl font-semibold">It's empty here</h1>
-            <p className="text-sm text-gray-600">Create a new canvas now</p>
+            <p className="text-sm text-gray-600">Create a new file now</p>
           </div>
 
-          <Button size="sm" onClick={() => navigate("/canvas/new")}>
+          <Button size="sm" onClick={() => navigate("/files/new")}>
             <IconCirclePlusFilled />
-            Create new canvas
+            Create new file
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Route } from "../../(dashboard)/settings/+types/layout";
+import type { Route } from "../../(dashboard)/files/+types/layout";
 import { authProxy } from "~/lib/auth-client";
 import { Outlet } from "react-router";
 

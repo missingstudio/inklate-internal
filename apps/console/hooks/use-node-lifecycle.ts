@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from "react";
-import { useCanvasStore } from "~/store/canvas-store";
+import { useFlowStore } from "~/store/flow-store";
 import { BaseNodeData } from "~/types/node";
 
 export interface NodeLifecycleConfig<T extends BaseNodeData> {
@@ -60,9 +60,9 @@ export function useNodeLifecycle<T extends BaseNodeData>(config: NodeLifecycleCo
     enableDebug = false
   } = config;
 
-  const nodeData = useCanvasStore((state) => state.getNodeData<T>(nodeId));
-  const setNodeData = useCanvasStore((state) => state.setNodeData);
-  const removeNode = useCanvasStore((state) => state.removeNode);
+  const nodeData = useFlowStore((state) => state.getNodeData<T>(nodeId));
+  const setNodeData = useFlowStore((state) => state.setNodeData);
+  const removeNode = useFlowStore((state) => state.removeNode);
 
   const [lifecycleState, setLifecycleState] = useState<NodeLifecycleState>({
     isInitialized: false,

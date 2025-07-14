@@ -1,9 +1,9 @@
 import { Edge, applyEdgeChanges, EdgeChange } from "@xyflow/react";
-import { EdgeSlice, CanvasState, EdgeId } from "~/types/store";
+import { EdgeSlice, FlowState, EdgeId } from "~/types/store";
 import { StateCreator } from "zustand";
 import { produce } from "immer";
 
-export const createEdgeSlice: StateCreator<CanvasState, [], [], EdgeSlice> = (set, get) => ({
+export const createEdgeSlice: StateCreator<FlowState, [], [], EdgeSlice> = (set, get) => ({
   edges: [],
 
   getEdge: (edgeId: EdgeId) => get().edges.find((e: Edge) => e.id === edgeId),
@@ -12,6 +12,13 @@ export const createEdgeSlice: StateCreator<CanvasState, [], [], EdgeSlice> = (se
     set(
       produce((state) => {
         state.edges.push(edge);
+      })
+    ),
+
+  setEdges: (edges: Edge[]) =>
+    set(
+      produce((state) => {
+        state.edges = edges;
       })
     ),
 

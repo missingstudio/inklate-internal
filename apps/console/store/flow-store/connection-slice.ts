@@ -1,5 +1,5 @@
 import { isHandleCompatible, transformHandleData } from "~/utils/handles/handle-registry";
-import { ConnectionSlice, CanvasState } from "~/types/store";
+import { ConnectionSlice, FlowState } from "~/types/store";
 import { Connection, Edge, addEdge } from "@xyflow/react";
 import { createEdge, edgeRegistry } from "~/utils/edges";
 import { HandleType } from "~/enums/handle-type.enum";
@@ -9,7 +9,7 @@ import { StateCreator } from "zustand";
 import { produce } from "immer";
 import { toast } from "sonner";
 
-export const createConnectionSlice: StateCreator<CanvasState, [], [], ConnectionSlice> = (
+export const createConnectionSlice: StateCreator<FlowState, [], [], ConnectionSlice> = (
   set,
   get
 ) => ({

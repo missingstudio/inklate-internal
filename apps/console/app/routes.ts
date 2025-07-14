@@ -10,11 +10,12 @@ export default [
   route("create-organization", "(dashboard)/create-organization/page.tsx"),
 
   layout("(dashboard)/layout.tsx", [
-    layout("(dashboard)/canvas/layout.tsx", [
-      index("(dashboard)/canvas/page.tsx"),
-      ...prefix("canvas", [
-        route("new", "(dashboard)/canvas/new-canvas.tsx"),
-        route(":canvasId", "(dashboard)/canvas/[canvasId]/page.tsx")
+    index("(dashboard)/files/home.tsx"),
+    layout("(dashboard)/files/layout.tsx", [
+      ...prefix("files", [
+        index("(dashboard)/files/page.tsx"),
+        route("new", "(dashboard)/files/new-file.tsx"),
+        route(":fileId", "(dashboard)/files/[fileId]/page.tsx")
       ])
     ]),
     layout(

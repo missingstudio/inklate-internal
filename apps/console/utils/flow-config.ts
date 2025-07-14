@@ -1,4 +1,4 @@
-export const canvasConfig = {
+export const flowConfig = {
   keybindings: {
     copy: ["meta+c"],
     paste: ["meta+v"],

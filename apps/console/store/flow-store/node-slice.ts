@@ -1,10 +1,10 @@
 import { Node, applyNodeChanges, NodeChange } from "@xyflow/react";
-import { NodeSlice, CanvasState, NodeId } from "~/types/store";
+import { NodeSlice, FlowState, NodeId } from "~/types/store";
 import { BaseNodeData } from "~/types/node";
 import { StateCreator } from "zustand";
 import { produce } from "immer";
 
-export const createNodeSlice: StateCreator<CanvasState, [], [], NodeSlice> = (set, get) => ({
+export const createNodeSlice: StateCreator<FlowState, [], [], NodeSlice> = (set, get) => ({
   nodes: [],
   getNode: (nodeId: NodeId) => get().nodes.find((n: Node) => n.id === nodeId),
 
@@ -12,6 +12,13 @@ export const createNodeSlice: StateCreator<CanvasState, [], [], NodeSlice> = (se
     set(
       produce((state) => {
         state.nodes.push(node);
+      })
+    ),
+
+  setNodes: (nodes: Node[]) =>
+    set(
+      produce((state) => {
+        state.nodes = nodes;
       })
     ),
 

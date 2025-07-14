@@ -28,15 +28,15 @@ interface NavConfig {
 }
 
 export const navigationConfig: Record<string, NavConfig> = {
-  canvas: {
-    path: "/canvas",
+  files: {
+    path: "/files",
     sections: [
       {
         title: "Home",
         items: [
           {
             title: "My files",
-            url: "/",
+            url: "/files",
             icon: IconDashboard,
             shortcut: "⌘D"
           }
@@ -52,7 +52,7 @@ export const navigationConfig: Record<string, NavConfig> = {
         title: "Navigation",
         items: [
           {
-            title: "Back to Canvas",
+            title: "Back to files",
             url: "/",
             icon: IconArrowLeft,
             isBackButton: true,

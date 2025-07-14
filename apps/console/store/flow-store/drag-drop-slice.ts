@@ -1,14 +1,11 @@
 import { nodeRegistry } from "~/utils/nodes/node-registry";
-import { DragDropSlice, CanvasState } from "~/types/store";
+import { DragDropSlice, FlowState } from "~/types/store";
 import { StateCreator } from "zustand";
 import { Node } from "@xyflow/react";
 import { DragEvent } from "react";
 import { produce } from "immer";
 
-export const createDragDropSlice: StateCreator<CanvasState, [], [], DragDropSlice> = (
-  set,
-  get
-) => ({
+export const createDragDropSlice: StateCreator<FlowState, [], [], DragDropSlice> = (set, get) => ({
   onDragOver: (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (event.dataTransfer) {

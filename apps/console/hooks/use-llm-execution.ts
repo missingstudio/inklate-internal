@@ -1,4 +1,4 @@
-import { useCanvasStore } from "~/store/canvas-store";
+import { useFlowStore } from "~/store/flow-store";
 import { useCallback, useEffect } from "react";
 import { BaseNodeData } from "~/types/node";
 import { useChat } from "@ai-sdk/react";
@@ -19,8 +19,8 @@ export function useLLMExecution(
   data: LLMNodeData,
   updateData: (updates: Partial<LLMNodeData>) => void
 ) {
-  const edges = useCanvasStore((state) => state.edges);
-  const transferData = useCanvasStore((state) => state.transferData);
+  const edges = useFlowStore((state) => state.edges);
+  const transferData = useFlowStore((state) => state.transferData);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, error, append, setInput } =
     useChat({

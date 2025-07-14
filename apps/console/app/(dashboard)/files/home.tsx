@@ -1,7 +1,7 @@
-import { Route } from "../../(dashboard)/canvas/+types/new-canvas";
-import { MetaFunction, redirect } from "react-router";
+import type { Route } from "../../(dashboard)/files/+types/page";
 import { siteConfig } from "~/utils/site-config";
-import { Canvas } from "~/components/canvas";
+import { MetaFunction } from "react-router";
+import { Home } from "~/components/home";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,5 +14,5 @@ export const meta: MetaFunction = () => {
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
-  return <Canvas />;
+  return <Home />;
 }

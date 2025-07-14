@@ -10,21 +10,26 @@ import { authRouter } from "./routers/auth";
 import { webSocketHandler } from "./ws";
 import { getAuth } from "~/lib/auth";
 import { cors } from "hono/cors";
+import { getDb } from "./db";
 
 export default class extends WorkerEntrypoint<typeof env> {
   private api = new Hono<HonoContext>()
     .use("*", async (c, next) => {
       const auth = getAuth(env.DATABASE_URL);
+      const db = getDb(env.DATABASE_URL);
       const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
+      c.set("db", db);
       c.set("auth", auth);
-      c.set("session", session?.session);
       c.set("user", session?.user);
+      c.set("session", session?.session);
 
       await next();
 
-      c.set("user", undefined);
+      c.set("db", undefined as any);
       c.set("auth", undefined as any);
+      c.set("user", undefined);
+      c.set("session", undefined);
     })
     .get("/ws", webSocketHandler)
     .route("/auth", authRouter)
