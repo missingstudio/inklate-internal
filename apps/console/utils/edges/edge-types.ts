@@ -1,5 +1,4 @@
 import { CustomEdge } from "~/components/edges/custom-edge";
-import { HandleType } from "~/enums/handle-type.enum";
 import { EdgeTypeDefinition } from "~/types/edge";
 import { addEdgeType } from "./edge-registry";
 

@@ -58,7 +58,7 @@ export function NavMain() {
         </SidebarGroup>
       )}
       {navItems.map((section) => (
-        <SidebarGroup key={section.title} className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup key={section.title}>
           <SidebarGroupLabel className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             {section.title}
           </SidebarGroupLabel>

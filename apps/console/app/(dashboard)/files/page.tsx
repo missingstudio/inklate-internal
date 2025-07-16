@@ -1,8 +1,8 @@
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@inklate/ui/table";
+import { columns } from "~/components/files/data-table/columns";
+import { DataTable } from "~/components/files/data-table";
 import { useTRPCClient } from "@inklate/common/trpc";
 import { useQuery } from "@tanstack/react-query";
 import { siteConfig } from "~/utils/site-config";
-import { Button } from "@inklate/ui/button";
 import { MetaFunction } from "react-router";
 import type { Route } from "./+types/home";
 import { useNavigate } from "react-router";
@@ -21,68 +21,25 @@ export const meta: MetaFunction = () => {
 export default function HomePage({ loaderData }: Route.ComponentProps) {
   const trpcClient = useTRPCClient();
   const navigate = useNavigate();
-  const {
-    data: files,
-    isLoading,
-    error,
-    refetch
-  } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["files", "getAll"],
     queryFn: () => trpcClient.files.getAll.query()
   });
 
+  const files = data?.map((file: any) => ({
+    id: file.id,
+    title: file.name
+  }));
+
   return (
-    <div className="mx-auto w-full max-w-4xl p-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-lg font-bold">Your files</h1>
-        <Button onClick={() => navigate("/files/new")}>Create new file</Button>
+    <div className="hidden h-full flex-1 flex-col gap-8 p-8 md:flex">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-semibold tracking-tight">Welcome back!</h2>
+          <p className="text-muted-foreground">Here&apos;s a list of your files</p>
+        </div>
       </div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <div className="text-red-500">Error loading files</div>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Updated At</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {files && files.length > 0 ? (
-              files.map((file: any) => (
-                <TableRow key={file.id}>
-                  <TableCell>{file.name}</TableCell>
-                  <TableCell>
-                    {file.createdAt ? new Date(file.createdAt).toLocaleString() : "-"}
-                  </TableCell>
-                  <TableCell>
-                    {file.updatedAt ? new Date(file.updatedAt).toLocaleString() : "-"}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => navigate(`/files/${file.id}`)}
-                    >
-                      Open
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  No files found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
+      <DataTable data={files} columns={columns} />
     </div>
   );
 }
